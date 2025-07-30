@@ -20,9 +20,8 @@ from werkzeug.utils import secure_filename
 from jose import jwt
 
 # --- Auth0 Configuration ---
-# IMPORTANT: Replace these with your Auth0 application's details.
-AUTH0_DOMAIN = 'dev-b0houl2m3pgvvqbt.us.auth0.com' # e.g., 'dev-12345.us.auth0.com'
-API_AUDIENCE = 'https://scorm-processor-api' # e.g., 'https://scorm-processor-api'
+AUTH0_DOMAIN = 'dev-b0houl2m3pgvvqbt.us.auth0.com' 
+API_AUDIENCE = 'https://scorm-processor-api'
 ALGORITHMS = ["RS256"]
 
 # --- Flask App Initialization ---
@@ -30,14 +29,13 @@ app = Flask(__name__)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['PROCESSED_FOLDER'] = 'processed'
-# CORRECTED: Added the missing configuration line
 app.config['KNOWBE4_FILE_PATH'] = 'special_files/scorm_2004.js'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['PROCESSED_FOLDER'], exist_ok=True)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
-# --- Authentication Decorator ---
+# --- Authentication Decorator (Unchanged) ---
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
@@ -50,7 +48,6 @@ def handle_auth_error(ex):
     return response
 
 def get_token_auth_header():
-    """Obtains the Access Token from the Authorization Header"""
     auth = request.headers.get("Authorization", None)
     if not auth:
         raise AuthError({"code": "authorization_header_missing", "description": "Authorization header is expected"}, 401)
@@ -74,22 +71,10 @@ def requires_auth(f):
         rsa_key = {}
         for key in jwks["keys"]:
             if key["kid"] == unverified_header["kid"]:
-                rsa_key = {
-                    "kty": key["kty"],
-                    "kid": key["kid"],
-                    "use": key["use"],
-                    "n": key["n"],
-                    "e": key["e"]
-                }
+                rsa_key = { "kty": key["kty"], "kid": key["kid"], "use": key["use"], "n": key["n"], "e": key["e"] }
         if rsa_key:
             try:
-                payload = jwt.decode(
-                    token,
-                    rsa_key,
-                    algorithms=ALGORITHMS,
-                    audience=API_AUDIENCE,
-                    issuer=f"https://{AUTH0_DOMAIN}/"
-                )
+                payload = jwt.decode( token, rsa_key, algorithms=ALGORITHMS, audience=API_AUDIENCE, issuer=f"https://{AUTH0_DOMAIN}/" )
             except jwt.ExpiredSignatureError:
                 raise AuthError({"code": "token_expired", "description": "token is expired"}, 401)
             except jwt.JWTClaimsError:
@@ -101,11 +86,11 @@ def requires_auth(f):
     return decorated
 
 
-# --- Generator-based helper functions (Unchanged) ---
+# --- Generator-based helper functions ---
 def clean_unnecessary_files(directory):
     yield "[STEP] Cleaning unnecessary files and folders"
     files_to_remove = ['aicc.*', 'readme.md', '.gitignore']
-    dirs_to_remove = ['.idea', '.vscode', '__MACOSX']
+    dirs_to_remove = ['.idea', '.vscode', '__MACOSX', 'nbproject']
     found_any = False
     for root, dirs, files in os.walk(directory, topdown=False):
         for pattern in files_to_remove:
@@ -129,26 +114,43 @@ def clean_unnecessary_files(directory):
         yield "  -> No unnecessary files or folders found to clean."
     yield "     ✅ SUCCESS: Cleanup complete."
 
-def edit_admin_settings(xml_path, scorm_version):
-    yield f"[STEP] Editing 'adminsettings.xml' for SCORM {scorm_version}"
-    if not os.path.exists(xml_path):
-        raise ValueError("'adminsettings.xml' not found.")
-    try:
-        ET.register_namespace('', "http://www.w3.org/2001/XMLSchema")
-        tree = ET.parse(xml_path)
-        root = tree.getroot()
-        changes = ({"UseScorm": "true", "UseScormVersion12": "true", "UseScormVersion2004": "false", "URLOnExit": "", "ReviewMode": "false", "HostedOniLMS": "false"}
-                   if scorm_version == '1.2' else
-                   {"UseScorm": "true", "UseScormVersion12": "false", "UseScormVersion2004": "true", "URLOnExit": "", "ReviewMode": "false", "HostedOniLMS": "false"})
-        for tag_name, value in changes.items():
-            element = root.find(f".//{{*}}{tag_name}") or root.find(tag_name)
-            if element is not None:
-                element.text = value
-                yield f"  -> Set <{tag_name}> to '{value}'"
-        tree.write(xml_path, encoding='utf-8', xml_declaration=True)
-        yield "     ✅ SUCCESS: 'adminsettings.xml' saved."
-    except Exception as e:
-        raise ValueError(f"Error parsing or editing adminsettings.xml: {e}")
+# --- MODIFIED: This function now searches all subdirectories ---
+def edit_admin_settings(directory, scorm_version):
+    yield f"[STEP] Finding and editing 'adminsettings.xml' files for SCORM {scorm_version}"
+    found_files = []
+    
+    # Walk through all directories and subdirectories
+    for root, _, files in os.walk(directory):
+        if 'adminsettings.xml' in files:
+            xml_path = os.path.join(root, 'adminsettings.xml')
+            found_files.append(xml_path)
+            relative_path = os.path.relpath(xml_path, directory)
+            yield f"  -> Found '{relative_path}'. Applying changes..."
+            
+            try:
+                ET.register_namespace('', "http://www.w3.org/2001/XMLSchema")
+                tree = ET.parse(xml_path)
+                xml_root = tree.getroot()
+                
+                changes = ({"UseScorm": "true", "UseScormVersion12": "true", "UseScormVersion2004": "false", "URLOnExit": "", "ReviewMode": "false", "HostedOniLMS": "false"}
+                           if scorm_version == '1.2' else
+                           {"UseScorm": "true", "UseScormVersion12": "false", "UseScormVersion2004": "true", "URLOnExit": "", "ReviewMode": "false", "HostedOniLMS": "false"})
+                
+                for tag_name, value in changes.items():
+                    element = xml_root.find(f".//{{*}}{tag_name}") or xml_root.find(tag_name)
+                    if element is not None:
+                        element.text = value
+                
+                tree.write(xml_path, encoding='utf-8', xml_declaration=True)
+                
+            except Exception as e:
+                yield f"  -> [ERROR] Failed to edit {relative_path}: {e}"
+
+    if not found_files:
+        yield "     ⚠️ WARNING: No 'adminsettings.xml' files were found in the package."
+    else:
+        yield f"     ✅ SUCCESS: Processed {len(found_files)} 'adminsettings.xml' file(s)."
+
 
 def edit_js_files_2004(js_folder_path, is_knowbe4):
     yield "[STEP] Editing JavaScript files for SCORM 2004"
@@ -213,8 +215,10 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4):
                 yield "[STEP] Updating manifest for SCORM 1.2"
                 os.remove(manifest_2004_path)
             yield "     ✅ SUCCESS: Manifest updated."
-            admin_settings_path = os.path.join(temp_extract_dir, 'xmls', 'en', 'adminsettings.xml')
-            yield from edit_admin_settings(admin_settings_path, scorm_type)
+            
+            # --- MODIFIED: Call the updated function with the root directory ---
+            yield from edit_admin_settings(temp_extract_dir, scorm_type)
+
             if scorm_type == '2004':
                 js_folder = os.path.join(temp_extract_dir, 'js')
                 yield from edit_js_files_2004(js_folder, is_knowbe4)
@@ -246,7 +250,7 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4):
             shutil.rmtree(temp_extract_dir)
 
 
-# --- API Endpoints ---
+# --- API Endpoints (Unchanged) ---
 @app.route('/api/process', methods=['POST'])
 @requires_auth
 def process_scorm_file(jwt_payload):
@@ -265,8 +269,9 @@ def process_scorm_file(jwt_payload):
     return Response(process_package_stream(upload_path, app.config['PROCESSED_FOLDER'], scorm_type, is_knowbe4), mimetype='text/event-stream')
 
 @app.route('/download/<path:filename>')
-# Note: In a true production system, this endpoint should also be protected by @requires_auth
-def download_file(filename):
+@requires_auth
+def download_file(jwt_payload, filename):
+    # Added @requires_auth from previous suggestion
     return send_from_directory(app.config['PROCESSED_FOLDER'], filename, as_attachment=True)
 
 @app.route('/api/batch_download', methods=['POST'])
@@ -275,17 +280,22 @@ def batch_download(jwt_payload):
     filenames = request.json.get('filenames')
     if not filenames:
         return jsonify({"error": "No filenames provided"}), 400
+    
+    safe_filenames = [secure_filename(f) for f in filenames]
     memory_file = io.BytesIO()
     with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
-        for f in filenames:
+        for f in safe_filenames:
             file_path = os.path.join(app.config['PROCESSED_FOLDER'], f)
             if os.path.exists(file_path):
                 zf.write(file_path, arcname=f)
     memory_file.seek(0)
-    for f in filenames:
+    
+    # Clean up files after zipping
+    for f in safe_filenames:
         file_path = os.path.join(app.config['PROCESSED_FOLDER'], f)
         if os.path.exists(file_path):
             os.remove(file_path)
+            
     return send_file(memory_file, download_name='scorm_batch.zip', as_attachment=True)
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 # app.py
-# --- The main web application file (with Authentication) ---
+# --- The main web application file (with Authentication and Branding) ---
 
 import os
 import shutil
@@ -14,15 +14,22 @@ import json
 from functools import wraps
 from urllib.request import urlopen
 
+# --- NEW: Import Pillow for image processing ---
+from PIL import Image
 from flask import Flask, request, send_from_directory, jsonify, Response, after_this_request, send_file
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from jose import jwt
 
 # --- Auth0 Configuration ---
-AUTH0_DOMAIN = 'dev-b0houl2m3pgvvqbt.us.auth0.com' 
+AUTH0_DOMAIN = 'dev-b0houl2m3pgvvqbt.us.auth0.com'
 API_AUDIENCE = 'https://scorm-processor-api'
 ALGORITHMS = ["RS256"]
+
+# --- NEW: Branding Configuration ---
+LOGO_WIDTH = 300
+LOGO_HEIGHT = 88
+LOGO_FILENAME_IENGINE5 = "customer_logo.png"
 
 # --- Flask App Initialization ---
 app = Flask(__name__)
@@ -90,7 +97,7 @@ def requires_auth(f):
 def clean_unnecessary_files(directory):
     yield "[STEP] Cleaning unnecessary files and folders"
     files_to_remove = ['aicc.*', 'readme.md', '.gitignore']
-    dirs_to_remove = ['.idea', '.vscode', '__MACOSX', 'nbproject']
+    dirs_to_remove = ['.idea', '.vscode', '__MACOSX']
     found_any = False
     for root, dirs, files in os.walk(directory, topdown=False):
         for pattern in files_to_remove:
@@ -114,43 +121,82 @@ def clean_unnecessary_files(directory):
         yield "  -> No unnecessary files or folders found to clean."
     yield "     ✅ SUCCESS: Cleanup complete."
 
-# --- MODIFIED: This function now searches all subdirectories ---
-def edit_admin_settings(directory, scorm_version):
+
+def edit_admin_settings(directory, scorm_version, engine_type, logo_details=None):
     yield f"[STEP] Finding and editing 'adminsettings.xml' files for SCORM {scorm_version}"
     found_files = []
-    
-    # Walk through all directories and subdirectories
     for root, _, files in os.walk(directory):
         if 'adminsettings.xml' in files:
             xml_path = os.path.join(root, 'adminsettings.xml')
             found_files.append(xml_path)
             relative_path = os.path.relpath(xml_path, directory)
             yield f"  -> Found '{relative_path}'. Applying changes..."
-            
             try:
                 ET.register_namespace('', "http://www.w3.org/2001/XMLSchema")
                 tree = ET.parse(xml_path)
                 xml_root = tree.getroot()
-                
                 changes = ({"UseScorm": "true", "UseScormVersion12": "true", "UseScormVersion2004": "false", "URLOnExit": "", "ReviewMode": "false", "HostedOniLMS": "false"}
                            if scorm_version == '1.2' else
                            {"UseScorm": "true", "UseScormVersion12": "false", "UseScormVersion2004": "true", "URLOnExit": "", "ReviewMode": "false", "HostedOniLMS": "false"})
-                
                 for tag_name, value in changes.items():
                     element = xml_root.find(f".//{{*}}{tag_name}") or xml_root.find(tag_name)
                     if element is not None:
                         element.text = value
                 
+                if logo_details:
+                    path_to_set = logo_details['path']
+                    if engine_type == 'iengine5':
+                        tags_to_update = ['toplogo']
+                    else: # iengine6
+                        tags_to_update = ['TopLogo', 'CustomerLogo']
+                    
+                    for tag in tags_to_update:
+                        logo_element = xml_root.find(f".//{{*}}{tag}") or xml_root.find(tag)
+                        if logo_element is not None:
+                            logo_element.text = path_to_set
+                            yield f"  -> Set <{tag}> to '{path_to_set}'"
+
                 tree.write(xml_path, encoding='utf-8', xml_declaration=True)
-                
             except Exception as e:
                 yield f"  -> [ERROR] Failed to edit {relative_path}: {e}"
-
     if not found_files:
         yield "     ⚠️ WARNING: No 'adminsettings.xml' files were found in the package."
     else:
         yield f"     ✅ SUCCESS: Processed {len(found_files)} 'adminsettings.xml' file(s)."
 
+def handle_branding(directory, logo_file_storage, engine_type, logo_filename):
+    yield "[STEP] Processing branding logo"
+    try:
+        # 1. Validate and resize image
+        img = Image.open(logo_file_storage)
+        if img.width != LOGO_WIDTH or img.height != LOGO_HEIGHT:
+            yield f"  -> Resizing logo from {img.width}x{img.height} to {LOGO_WIDTH}x{LOGO_HEIGHT}px."
+            img = img.resize((LOGO_WIDTH, LOGO_HEIGHT), Image.Resampling.LANCZOS)
+        
+        logo_details = {}
+        
+        # 2. Place logo and define path based on engine type
+        if engine_type == 'iengine5':
+            logo_dest_folder = os.path.join(directory, 'skins', 'black-unique', 'skinimages')
+            logo_final_path = os.path.join(logo_dest_folder, LOGO_FILENAME_IENGINE5)
+            # For iengine5, path is absolute from the course root
+            logo_path_for_xml = 'skins/black-unique/skinimages/' + LOGO_FILENAME_IENGINE5
+        else: # iengine6
+            logo_dest_folder = os.path.join(directory, 'xmls')
+            logo_final_path = os.path.join(logo_dest_folder, logo_filename)
+            # --- FIX: Prepend ../ to create a correct relative path ---
+            logo_path_for_xml = '../' + logo_filename
+
+        os.makedirs(logo_dest_folder, exist_ok=True)
+        img.save(logo_final_path, 'PNG')
+        yield f"  -> Saved logo to: {os.path.relpath(logo_final_path, directory)}"
+        
+        logo_details['path'] = logo_path_for_xml
+        yield "     ✅ SUCCESS: Branding processed."
+        return logo_details
+
+    except Exception as e:
+        raise ValueError(f"Could not process logo: {e}")
 
 def edit_js_files_2004(js_folder_path, is_knowbe4):
     yield "[STEP] Editing JavaScript files for SCORM 2004"
@@ -184,15 +230,14 @@ def edit_js_files_2004(js_folder_path, is_knowbe4):
 
 
 # --- Main processing stream ---
-def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4):
+def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_data=None, logo_filename=None):
     base_name = os.path.basename(zip_path)
     temp_extract_dir = os.path.join(output_dir, f"_temp_{base_name}")
     if os.path.exists(temp_extract_dir): shutil.rmtree(temp_extract_dir)
     os.makedirs(temp_extract_dir)
     def format_sse(data, event=None):
         msg = f'data: {data}\n'
-        if event is not None:
-            msg = f'event: {event}\n{msg}'
+        if event is not None: msg = f'event: {event}\n{msg}'
         return f'{msg}\n'
     try:
         def main_processing_flow():
@@ -200,7 +245,25 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4):
             with zipfile.ZipFile(zip_path, 'r') as zip_ref:
                 zip_ref.extractall(temp_extract_dir)
             yield "     ✅ SUCCESS: Package unzipped."
+            
+            # --- DETECT ENGINE AND LOG ---
+            is_iengine5 = os.path.exists(os.path.join(temp_extract_dir, 'scorm'))
+            engine_type = 'iengine5' if is_iengine5 else 'iengine6'
+            yield f"  -> Engine Type detected: {engine_type}"
+
             yield from clean_unnecessary_files(temp_extract_dir)
+            
+            logo_details = None
+            if logo_data:
+                branding_flow = handle_branding(temp_extract_dir, logo_data, engine_type, logo_filename)
+                while True:
+                    try:
+                        log_line = next(branding_flow)
+                        yield log_line
+                    except StopIteration as e:
+                        logo_details = e.value
+                        break
+            
             yield "[STEP] Validating manifest files"
             manifest_path = os.path.join(temp_extract_dir, 'imsmanifest.xml')
             manifest_2004_path = os.path.join(temp_extract_dir, 'imsmanifest_SCORM2004.xml')
@@ -209,15 +272,13 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4):
             yield "     ✅ SUCCESS: Both manifest files found."
             if scorm_type == '2004':
                 yield "[STEP] Updating manifest for SCORM 2004"
-                os.remove(manifest_path)
-                os.rename(manifest_2004_path, manifest_path)
+                os.remove(manifest_path); os.rename(manifest_2004_path, manifest_path)
             elif scorm_type == '1.2':
                 yield "[STEP] Updating manifest for SCORM 1.2"
                 os.remove(manifest_2004_path)
             yield "     ✅ SUCCESS: Manifest updated."
             
-            # --- MODIFIED: Call the updated function with the root directory ---
-            yield from edit_admin_settings(temp_extract_dir, scorm_type)
+            yield from edit_admin_settings(temp_extract_dir, scorm_type, engine_type, logo_details)
 
             if scorm_type == '2004':
                 js_folder = os.path.join(temp_extract_dir, 'js')
@@ -246,17 +307,17 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4):
         app.logger.error(f"Processing failed: {e}", exc_info=True)
         yield format_sse(f'{{"message": "FATAL ERROR: {str(e)}"}}', 'error')
     finally:
-        if os.path.exists(temp_extract_dir):
-            shutil.rmtree(temp_extract_dir)
+        if os.path.exists(temp_extract_dir): shutil.rmtree(temp_extract_dir)
 
 
-# --- API Endpoints (Unchanged) ---
+# --- API Endpoints ---
 @app.route('/api/process', methods=['POST'])
 @requires_auth
 def process_scorm_file(jwt_payload):
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
     file = request.files['file']
+    logo_file = request.files.get('logo', None)
     scorm_type = request.form.get('scorm_type', '2004')
     is_knowbe4 = request.form.get('is_knowbe4') == 'true'
     if file.filename == '':
@@ -266,12 +327,18 @@ def process_scorm_file(jwt_payload):
     filename = secure_filename(file.filename)
     upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(upload_path)
-    return Response(process_package_stream(upload_path, app.config['PROCESSED_FOLDER'], scorm_type, is_knowbe4), mimetype='text/event-stream')
+
+    logo_data = None
+    logo_filename = None
+    if logo_file:
+        logo_filename = secure_filename(logo_file.filename)
+        logo_data = io.BytesIO(logo_file.read())
+
+    return Response(process_package_stream(upload_path, app.config['PROCESSED_FOLDER'], scorm_type, is_knowbe4, logo_data, logo_filename), mimetype='text/event-stream')
 
 @app.route('/download/<path:filename>')
 @requires_auth
 def download_file(jwt_payload, filename):
-    # Added @requires_auth from previous suggestion
     return send_from_directory(app.config['PROCESSED_FOLDER'], filename, as_attachment=True)
 
 @app.route('/api/batch_download', methods=['POST'])
@@ -290,7 +357,6 @@ def batch_download(jwt_payload):
                 zf.write(file_path, arcname=f)
     memory_file.seek(0)
     
-    # Clean up files after zipping
     for f in safe_filenames:
         file_path = os.path.join(app.config['PROCESSED_FOLDER'], f)
         if os.path.exists(file_path):

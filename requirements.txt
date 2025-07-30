@@ -7,3 +7,4 @@ flask-cors
 gevent
 python-jose
 six
+Pillow

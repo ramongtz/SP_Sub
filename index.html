@@ -6,7 +6,6 @@
     <title>SCORM Processor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Auth0 SDK -->
     <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -20,7 +19,6 @@
 <body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
 
     <div class="w-full max-w-xl bg-white rounded-xl shadow-2xl p-8 space-y-8">
-        <!-- Header -->
         <div class="flex justify-between items-center">
              <h1 class="text-xl font-bold text-slate-900">SCORM Processor</h1>
              <div>
@@ -29,11 +27,8 @@
              </div>
         </div>
         
-        <!-- Main Application Body (hidden until logged in) -->
         <div id="app-body" class="hidden">
-            <!-- Form -->
             <form id="upload-form" class="space-y-6">
-                <!-- File Drop Zone -->
                 <div>
                     <label for="file-input" class="block text-sm font-semibold text-slate-700 mb-2">SCORM Package(s) (.zip)</label>
                     <div id="file-drop-zone" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-lg">
@@ -45,12 +40,19 @@
                                 </label>
                                 <p class="pl-1">or drag and drop</p>
                             </div>
-                            <p id="file-name-display" class="text-xs text-slate-500">ZIP files up to 50MB</p>
+                            <p id="file-name-display" class="text-xs text-slate-500">ZIP files up to 200MB</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- SCORM Version Selection -->
+                <div>
+                    <label for="logo-input" class="block text-sm font-semibold text-slate-700">Branding Logo (Optional)</label>
+                    <div class="mt-2">
+                        <input class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" id="logo-input" type="file" name="logo" accept="image/png, image/jpeg, image/gif">
+                    </div>
+                    <p class="mt-1 text-xs text-slate-500">PNG, JPG, or GIF. Required size: 300x88px.</p>
+                </div>
+
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Target SCORM Version</label>
                     <fieldset class="mt-2"><div class="grid grid-cols-2 gap-3">
@@ -67,7 +69,6 @@
                     </div></fieldset>
                 </div>
 
-                <!-- KnowBe4 Option -->
                 <div id="knowbe4-option-container" class="knowbe4-option">
                     <div class="relative flex items-start">
                         <div class="flex h-5 items-center">
@@ -80,13 +81,11 @@
                     </div>
                 </div>
 
-                <!-- Submit Button -->
                 <div><button type="submit" id="submit-button" class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-slate-400 disabled:cursor-not-allowed">
                     <span id="button-text">Process Files</span><div id="button-spinner" class="spinner h-5 w-5 ml-3 border-2 border-white rounded-full hidden"></div>
                 </button></div>
             </form>
             
-            <!-- Results Section -->
             <div id="results-section" class="hidden">
                 <h3 class="text-lg font-medium leading-6 text-slate-900">Processed Files</h3>
                 <ul id="results-list" class="mt-4 space-y-2"></ul>
@@ -99,7 +98,6 @@
         </div>
     </div>
 
-    <!-- Log Modal -->
     <div id="log-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center hidden opacity-0">
         <div class="modal-content relative mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white transform scale-95">
             <div class="mt-3 text-center">
@@ -125,6 +123,7 @@
         const form = document.getElementById('upload-form');
         const submitButton = document.getElementById('submit-button');
         const fileInput = document.getElementById('file-input');
+        const logoInput = document.getElementById('logo-input');
         const dropZone = document.getElementById('file-drop-zone');
         const fileNameDisplay = document.getElementById('file-name-display');
         const logModal = document.getElementById('log-modal');
@@ -141,20 +140,15 @@
 
         // --- Auth0 Configuration ---
         const auth0Config = {
-            domain: "dev-b0houl2m3pgvvqbt.us.auth0.com", // e.g., 'dev-12345.us.auth0.com'
+            domain: "dev-b0houl2m3pgvvqbt.us.auth0.com",
             clientId: "MLqbVDJ9znJW8ajp0ZZTmD86YVEcRvh8",
             authorizationParams: {
-                audience: "https://scorm-processor-api", // e.g., 'https://scorm-processor-api'
+                audience: "https://scorm-processor-api",
             }
         };
 
         // --- Event Listeners ---
-        // UPDATED: Explicitly pass the redirect_uri
-        loginBtn.addEventListener('click', () => auth0Client.loginWithRedirect({
-            authorizationParams: {
-                redirect_uri: window.location.origin
-            }
-        }));
+        loginBtn.addEventListener('click', () => auth0Client.loginWithRedirect({ authorizationParams: { redirect_uri: window.location.origin } }));
         logoutBtn.addEventListener('click', () => auth0Client.logout());
         dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-indigo-600', 'bg-indigo-50'); });
         dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-indigo-600', 'bg-indigo-50'); });
@@ -186,7 +180,7 @@
         }
         function updateFileName() {
             const numFiles = fileInput.files.length;
-            fileNameDisplay.textContent = numFiles > 1 ? `${numFiles} files selected` : (numFiles === 1 ? fileInput.files[0].name : 'ZIP files up to 50MB');
+            fileNameDisplay.textContent = numFiles > 1 ? `${numFiles} files selected` : (numFiles === 1 ? fileInput.files[0].name : 'ZIP files up to 200MB');
         }
         function toggleModal(show) {
             if (show) {
@@ -205,7 +199,16 @@
             resultsSection.classList.remove('hidden');
             processedFiles.push(filename);
             const li = document.createElement('li');
-            li.innerHTML = `<a href="${url}" download="${filename}" class="flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-lg"><span class="text-sm font-medium text-slate-800">${filename}</span><svg class="h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 9.707a1 1 0 011.414 0L9 11.086V3a1 1 0 112 0v8.086l1.293-1.379a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" /></svg></a>`;
+            const a = document.createElement('a');
+            a.href = url;
+            a.dataset.filename = filename; // Store filename
+            a.className = "flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-lg";
+            a.innerHTML = `<span class="text-sm font-medium text-slate-800">${filename}</span><svg class="h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 9.707a1 1 0 011.414 0L9 11.086V3a1 1 0 112 0v8.086l1.293-1.379a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" /></svg>`;
+            
+            // --- MODIFIED: Add click handler for secure download ---
+            a.addEventListener('click', handleDownloadClick);
+            
+            li.appendChild(a);
             resultsList.appendChild(li);
         }
         function setLoadingState(isLoading) {
@@ -215,9 +218,46 @@
         }
 
         // --- Core Logic ---
+        // --- NEW: Secure download handler ---
+        async function handleDownloadClick(event) {
+            event.preventDefault();
+            const target = event.currentTarget;
+            const url = target.href;
+            const filename = target.dataset.filename;
+            target.innerHTML = `<span class="text-sm font-medium text-slate-800">Preparing...</span>`;
+
+            try {
+                const accessToken = await auth0Client.getTokenSilently();
+                const response = await fetch(url, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    window.URL.revokeObjectURL(downloadUrl);
+                } else {
+                    alert('Download failed. You may need to log in again.');
+                }
+            } catch (error) {
+                alert('An error occurred during download. Please try again.');
+            } finally {
+                 target.innerHTML = `<span class="text-sm font-medium text-slate-800">${filename}</span><svg class="h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 9.707a1 1 0 011.414 0L9 11.086V3a1 1 0 112 0v8.086l1.293-1.379a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" /></svg>`;
+            }
+        }
+        
         async function handleFormSubmit(event) {
             event.preventDefault();
             const files = fileInput.files;
+            const logoFile = logoInput.files[0];
             if (!files || files.length === 0) { alert('Please select one or more files.'); return; }
             
             setLoadingState(true);
@@ -229,7 +269,7 @@
             logOutput.textContent = `Starting batch process for ${files.length} file(s)...\n\n`;
 
             for (let i = 0; i < files.length; i++) {
-                await processSingleFile(files[i], i + 1, files.length);
+                await processSingleFile(files[i], i + 1, files.length, logoFile);
             }
 
             logOutput.textContent += '✅ Batch process complete.';
@@ -239,7 +279,7 @@
             setLoadingState(false);
         }
 
-        async function processSingleFile(file, index, total) {
+        async function processSingleFile(file, index, total, logoFile) {
             logOutput.textContent += `--- Processing file ${index} of ${total}: ${file.name} ---\n`;
             
             const accessToken = await auth0Client.getTokenSilently();
@@ -248,6 +288,9 @@
             formData.append('scorm_type', document.querySelector('input[name="scorm_type"]:checked').value);
             if (document.getElementById('is_knowbe4').checked) {
                 formData.append('is_knowbe4', 'true');
+            }
+            if (logoFile) {
+                formData.append('logo', logoFile);
             }
 
             try {

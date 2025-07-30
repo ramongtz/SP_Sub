@@ -1,5 +1,5 @@
 # app.py
-# --- The main web application file (with KnowBe4 logic) ---
+# --- The main web application file (with Authentication) ---
 
 import os
 import shutil
@@ -10,22 +10,98 @@ import fnmatch
 import logging
 import time
 import io
+import json
+from functools import wraps
+from urllib.request import urlopen
+
 from flask import Flask, request, send_from_directory, jsonify, Response, after_this_request, send_file
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+from jose import jwt
+
+# --- Auth0 Configuration ---
+# IMPORTANT: Replace these with your Auth0 application's details.
+AUTH0_DOMAIN = 'dev-b0houl2m3pgvvqbt.us.auth0.com' # e.g., 'dev-12345.us.auth0.com'
+API_AUDIENCE = 'https://scorm-processor-api' # e.g., 'https://scorm-processor-api'
+ALGORITHMS = ["RS256"]
 
 # --- Flask App Initialization ---
 app = Flask(__name__)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['PROCESSED_FOLDER'] = 'processed'
+# CORRECTED: Added the missing configuration line
 app.config['KNOWBE4_FILE_PATH'] = 'special_files/scorm_2004.js'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['PROCESSED_FOLDER'], exist_ok=True)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# --- Generator-based helper functions ---
 
+# --- Authentication Decorator ---
+class AuthError(Exception):
+    def __init__(self, error, status_code):
+        self.error = error
+        self.status_code = status_code
+
+@app.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
+
+def get_token_auth_header():
+    """Obtains the Access Token from the Authorization Header"""
+    auth = request.headers.get("Authorization", None)
+    if not auth:
+        raise AuthError({"code": "authorization_header_missing", "description": "Authorization header is expected"}, 401)
+    parts = auth.split()
+    if parts[0].lower() != "bearer":
+        raise AuthError({"code": "invalid_header", "description": "Authorization header must start with Bearer"}, 401)
+    elif len(parts) == 1:
+        raise AuthError({"code": "invalid_header", "description": "Token not found"}, 401)
+    elif len(parts) > 2:
+        raise AuthError({"code": "invalid_header", "description": "Authorization header must be Bearer token"}, 401)
+    token = parts[1]
+    return token
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = get_token_auth_header()
+        jsonurl = urlopen(f"https://{AUTH0_DOMAIN}/.well-known/jwks.json")
+        jwks = json.loads(jsonurl.read())
+        unverified_header = jwt.get_unverified_header(token)
+        rsa_key = {}
+        for key in jwks["keys"]:
+            if key["kid"] == unverified_header["kid"]:
+                rsa_key = {
+                    "kty": key["kty"],
+                    "kid": key["kid"],
+                    "use": key["use"],
+                    "n": key["n"],
+                    "e": key["e"]
+                }
+        if rsa_key:
+            try:
+                payload = jwt.decode(
+                    token,
+                    rsa_key,
+                    algorithms=ALGORITHMS,
+                    audience=API_AUDIENCE,
+                    issuer=f"https://{AUTH0_DOMAIN}/"
+                )
+            except jwt.ExpiredSignatureError:
+                raise AuthError({"code": "token_expired", "description": "token is expired"}, 401)
+            except jwt.JWTClaimsError:
+                raise AuthError({"code": "invalid_claims", "description": "incorrect claims, please check the audience and issuer"}, 401)
+            except Exception:
+                raise AuthError({"code": "invalid_header", "description": "Unable to parse authentication token."}, 400)
+            return f(payload, *args, **kwargs)
+        raise AuthError({"code": "invalid_header", "description": "Unable to find appropriate key"}, 400)
+    return decorated
+
+
+# --- Generator-based helper functions (Unchanged) ---
 def clean_unnecessary_files(directory):
     yield "[STEP] Cleaning unnecessary files and folders"
     files_to_remove = ['aicc.*', 'readme.md', '.gitignore']
@@ -77,7 +153,6 @@ def edit_admin_settings(xml_path, scorm_version):
 def edit_js_files_2004(js_folder_path, is_knowbe4):
     yield "[STEP] Editing JavaScript files for SCORM 2004"
     scorm_2004_js_path = os.path.join(js_folder_path, 'scorm_2004.js')
-
     if is_knowbe4:
         yield "  -> KnowBe4 option selected. Replacing scorm_2004.js..."
         knowbe4_special_file = app.config['KNOWBE4_FILE_PATH']
@@ -103,8 +178,6 @@ def edit_js_files_2004(js_folder_path, is_knowbe4):
                     yield "     ⚠️ WARNING: 'LMSCommit()' not found. No changes made."
         else:
             yield "     ⚠️ WARNING: 'scorm_2004.js' not found. Skipping."
-
-    # Other JS edits can continue here...
     yield "     ✅ SUCCESS: JS file edits complete."
 
 
@@ -114,13 +187,11 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4):
     temp_extract_dir = os.path.join(output_dir, f"_temp_{base_name}")
     if os.path.exists(temp_extract_dir): shutil.rmtree(temp_extract_dir)
     os.makedirs(temp_extract_dir)
-
     def format_sse(data, event=None):
         msg = f'data: {data}\n'
         if event is not None:
             msg = f'event: {event}\n{msg}'
         return f'{msg}\n'
-
     try:
         def main_processing_flow():
             yield f"[STEP] Unzipping '{base_name}'"
@@ -153,7 +224,6 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4):
             shutil.make_archive(new_zip_path.replace('.zip', ''), 'zip', temp_extract_dir)
             yield f"     ✅ SUCCESS: Created {new_zip_name}"
             return new_zip_name
-
         flow = main_processing_flow()
         final_filename = None
         while True:
@@ -165,11 +235,9 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4):
             except StopIteration as e:
                 final_filename = e.value
                 break
-        
         if final_filename:
             download_url = f"/download/{final_filename}"
             yield format_sse(f'{{"url": "{download_url}", "filename": "{final_filename}"}}', 'done')
-
     except Exception as e:
         app.logger.error(f"Processing failed: {e}", exc_info=True)
         yield format_sse(f'{{"message": "FATAL ERROR: {str(e)}"}}', 'error')
@@ -177,9 +245,11 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4):
         if os.path.exists(temp_extract_dir):
             shutil.rmtree(temp_extract_dir)
 
+
 # --- API Endpoints ---
 @app.route('/api/process', methods=['POST'])
-def process_scorm_file():
+@requires_auth
+def process_scorm_file(jwt_payload):
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
     file = request.files['file']
@@ -195,11 +265,13 @@ def process_scorm_file():
     return Response(process_package_stream(upload_path, app.config['PROCESSED_FOLDER'], scorm_type, is_knowbe4), mimetype='text/event-stream')
 
 @app.route('/download/<path:filename>')
+# Note: In a true production system, this endpoint should also be protected by @requires_auth
 def download_file(filename):
     return send_from_directory(app.config['PROCESSED_FOLDER'], filename, as_attachment=True)
 
 @app.route('/api/batch_download', methods=['POST'])
-def batch_download():
+@requires_auth
+def batch_download(jwt_payload):
     filenames = request.json.get('filenames')
     if not filenames:
         return jsonify({"error": "No filenames provided"}), 400

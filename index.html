@@ -6,6 +6,8 @@
     <title>SCORM Processor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Auth0 SDK -->
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         #file-drop-zone { transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out; }
@@ -19,80 +21,80 @@
 
     <div class="w-full max-w-xl bg-white rounded-xl shadow-2xl p-8 space-y-8">
         <!-- Header -->
-        <div class="text-center">
-            <div class="flex items-center justify-center mx-auto h-12 w-12 rounded-full bg-indigo-100">
-                <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v16h16V4H4zm8 12l-4-4h3V8h2v4h3l-4 4z"/></svg>
-            </div>
-            <h1 class="text-3xl font-bold text-slate-900 mt-4">SCORM Processor</h1>
-            <p class="text-slate-500 mt-2">A simple tool to package and clean your SCORM files.</p>
+        <div class="flex justify-between items-center">
+             <h1 class="text-xl font-bold text-slate-900">SCORM Processor</h1>
+             <div>
+                <button id="btn-login" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Log In</button>
+                <button id="btn-logout" class="hidden text-sm font-medium text-indigo-600 hover:text-indigo-500">Log Out</button>
+             </div>
         </div>
-
-        <!-- Form -->
-        <form id="upload-form" class="space-y-6">
-            <!-- File Drop Zone -->
-            <div>
-                <label for="file-input" class="block text-sm font-semibold text-slate-700 mb-2">SCORM Package(s) (.zip)</label>
-                <div id="file-drop-zone" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-lg">
-                    <div class="space-y-1 text-center"><svg class="mx-auto h-12 w-12 text-slate-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                        <div class="flex text-sm text-slate-600">
-                            <label for="file-input" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                                <span>Upload files</span>
-                                <input id="file-input" name="file" type="file" class="sr-only" accept=".zip" multiple>
-                            </label>
-                            <p class="pl-1">or drag and drop</p>
-                        </div>
-                        <p id="file-name-display" class="text-xs text-slate-500">ZIP files up to 50MB</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SCORM Version Selection -->
-            <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-2">Target SCORM Version</label>
-                <fieldset class="mt-2"><div class="grid grid-cols-2 gap-3">
-                    <label for="scorm_2004" class="relative flex items-center p-3 border rounded-lg cursor-pointer has-[:checked]:bg-indigo-50 has-[:checked]:border-indigo-300 has-[:checked]:ring-1 has-[:checked]:ring-indigo-300">
-                        <input id="scorm_2004" name="scorm_type" type="radio" value="2004" checked class="sr-only">
-                        <span class="flex-1 text-sm font-medium text-slate-900">SCORM 2004</span>
-                        <svg class="h-5 w-5 ml-3 text-indigo-600 invisible checked:visible" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
-                    </label>
-                    <label for="scorm_1_2" class="relative flex items-center p-3 border rounded-lg cursor-pointer has-[:checked]:bg-indigo-50 has-[:checked]:border-indigo-300 has-[:checked]:ring-1 has-[:checked]:ring-indigo-300">
-                        <input id="scorm_1_2" name="scorm_type" type="radio" value="1.2" class="sr-only">
-                        <span class="flex-1 text-sm font-medium text-slate-900">SCORM 1.2</span>
-                        <svg class="h-5 w-5 ml-3 text-indigo-600 invisible checked:visible" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
-                    </label>
-                </div></fieldset>
-            </div>
-
-            <!-- KnowBe4 Option -->
-            <div id="knowbe4-option-container" class="knowbe4-option">
-                <div class="relative flex items-start">
-                    <div class="flex h-5 items-center">
-                        <input id="is_knowbe4" name="is_knowbe4" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                    </div>
-                    <div class="ml-3 text-sm">
-                        <label for="is_knowbe4" class="font-medium text-slate-700">Package for KnowBe4</label>
-                        <p class="text-slate-500">Replaces `scorm_2004.js` with the special version.</p>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Submit Button -->
-            <div><button type="submit" id="submit-button" class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-slate-400 disabled:cursor-not-allowed">
-                <span id="button-text">Process Files</span><div id="button-spinner" class="spinner h-5 w-5 ml-3 border-2 border-white rounded-full hidden"></div>
-            </button></div>
-        </form>
         
-        <!-- Results Section -->
-        <div id="results-section" class="hidden">
-            <h3 class="text-lg font-medium leading-6 text-slate-900">Processed Files</h3>
-            <ul id="results-list" class="mt-4 space-y-2">
-                <!-- Download links will be added here -->
-            </ul>
-            <div class="mt-6">
-                <button id="download-all-button" disabled class="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-slate-400 disabled:cursor-not-allowed">
-                    Download All (.zip)
-                </button>
+        <!-- Main Application Body (hidden until logged in) -->
+        <div id="app-body" class="hidden">
+            <!-- Form -->
+            <form id="upload-form" class="space-y-6">
+                <!-- File Drop Zone -->
+                <div>
+                    <label for="file-input" class="block text-sm font-semibold text-slate-700 mb-2">SCORM Package(s) (.zip)</label>
+                    <div id="file-drop-zone" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-lg">
+                        <div class="space-y-1 text-center"><svg class="mx-auto h-12 w-12 text-slate-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                            <div class="flex text-sm text-slate-600">
+                                <label for="file-input" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                    <span>Upload files</span>
+                                    <input id="file-input" name="file" type="file" class="sr-only" accept=".zip" multiple>
+                                </label>
+                                <p class="pl-1">or drag and drop</p>
+                            </div>
+                            <p id="file-name-display" class="text-xs text-slate-500">ZIP files up to 50MB</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCORM Version Selection -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Target SCORM Version</label>
+                    <fieldset class="mt-2"><div class="grid grid-cols-2 gap-3">
+                        <label for="scorm_2004" class="relative flex items-center p-3 border rounded-lg cursor-pointer has-[:checked]:bg-indigo-50 has-[:checked]:border-indigo-300 has-[:checked]:ring-1 has-[:checked]:ring-indigo-300">
+                            <input id="scorm_2004" name="scorm_type" type="radio" value="2004" checked class="sr-only">
+                            <span class="flex-1 text-sm font-medium text-slate-900">SCORM 2004</span>
+                            <svg class="h-5 w-5 ml-3 text-indigo-600 invisible checked:visible" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        </label>
+                        <label for="scorm_1_2" class="relative flex items-center p-3 border rounded-lg cursor-pointer has-[:checked]:bg-indigo-50 has-[:checked]:border-indigo-300 has-[:checked]:ring-1 has-[:checked]:ring-indigo-300">
+                            <input id="scorm_1_2" name="scorm_type" type="radio" value="1.2" class="sr-only">
+                            <span class="flex-1 text-sm font-medium text-slate-900">SCORM 1.2</span>
+                            <svg class="h-5 w-5 ml-3 text-indigo-600 invisible checked:visible" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        </label>
+                    </div></fieldset>
+                </div>
+
+                <!-- KnowBe4 Option -->
+                <div id="knowbe4-option-container" class="knowbe4-option">
+                    <div class="relative flex items-start">
+                        <div class="flex h-5 items-center">
+                            <input id="is_knowbe4" name="is_knowbe4" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="is_knowbe4" class="font-medium text-slate-700">Package for KnowBe4</label>
+                            <p class="text-slate-500">Replaces `scorm_2004.js` with the special version.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div><button type="submit" id="submit-button" class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-slate-400 disabled:cursor-not-allowed">
+                    <span id="button-text">Process Files</span><div id="button-spinner" class="spinner h-5 w-5 ml-3 border-2 border-white rounded-full hidden"></div>
+                </button></div>
+            </form>
+            
+            <!-- Results Section -->
+            <div id="results-section" class="hidden">
+                <h3 class="text-lg font-medium leading-6 text-slate-900">Processed Files</h3>
+                <ul id="results-list" class="mt-4 space-y-2"></ul>
+                <div class="mt-6">
+                    <button id="download-all-button" disabled class="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-slate-400 disabled:cursor-not-allowed">
+                        Download All (.zip)
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -116,6 +118,10 @@
 
 
     <script>
+        // --- DOM Elements ---
+        const loginBtn = document.getElementById('btn-login');
+        const logoutBtn = document.getElementById('btn-logout');
+        const appBody = document.getElementById('app-body');
         const form = document.getElementById('upload-form');
         const submitButton = document.getElementById('submit-button');
         const fileInput = document.getElementById('file-input');
@@ -130,9 +136,26 @@
         const knowbe4Container = document.getElementById('knowbe4-option-container');
         const scormTypeRadios = document.querySelectorAll('input[name="scorm_type"]');
 
+        let auth0Client = null;
         let processedFiles = [];
 
+        // --- Auth0 Configuration ---
+        const auth0Config = {
+            domain: "dev-b0houl2m3pgvvqbt.us.auth0.com", // e.g., 'dev-12345.us.auth0.com'
+            clientId: "MLqbVDJ9znJW8ajp0ZZTmD86YVEcRvh8",
+            authorizationParams: {
+                audience: "https://scorm-processor-api", // e.g., 'https://scorm-processor-api'
+            }
+        };
+
         // --- Event Listeners ---
+        // UPDATED: Explicitly pass the redirect_uri
+        loginBtn.addEventListener('click', () => auth0Client.loginWithRedirect({
+            authorizationParams: {
+                redirect_uri: window.location.origin
+            }
+        }));
+        logoutBtn.addEventListener('click', () => auth0Client.logout());
         dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-indigo-600', 'bg-indigo-50'); });
         dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-indigo-600', 'bg-indigo-50'); });
         dropZone.addEventListener('drop', (e) => {
@@ -150,16 +173,21 @@
         scormTypeRadios.forEach(radio => radio.addEventListener('change', toggleKnowBe4Option));
 
         // --- UI Functions ---
+        const updateUI = async () => {
+            const isAuthenticated = await auth0Client.isAuthenticated();
+            loginBtn.classList.toggle('hidden', isAuthenticated);
+            logoutBtn.classList.toggle('hidden', !isAuthenticated);
+            appBody.classList.toggle('hidden', !isAuthenticated);
+        };
+
         function toggleKnowBe4Option() {
             const isScorm2004 = document.querySelector('input[name="scorm_type"]:checked').value === '2004';
             knowbe4Container.style.display = isScorm2004 ? 'block' : 'none';
         }
-
         function updateFileName() {
             const numFiles = fileInput.files.length;
             fileNameDisplay.textContent = numFiles > 1 ? `${numFiles} files selected` : (numFiles === 1 ? fileInput.files[0].name : 'ZIP files up to 50MB');
         }
-
         function toggleModal(show) {
             if (show) {
                 logModal.classList.remove('hidden');
@@ -173,20 +201,13 @@
                 setTimeout(() => logModal.classList.add('hidden'), 250);
             }
         }
-
         function addDownloadLink(filename, url) {
             resultsSection.classList.remove('hidden');
             processedFiles.push(filename);
             const li = document.createElement('li');
-            li.innerHTML = `
-                <a href="${url}" download="${filename}" class="flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-lg">
-                    <span class="text-sm font-medium text-slate-800">${filename}</span>
-                    <svg class="h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 9.707a1 1 0 011.414 0L9 11.086V3a1 1 0 112 0v8.086l1.293-1.379a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" /></svg>
-                </a>
-            `;
+            li.innerHTML = `<a href="${url}" download="${filename}" class="flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-lg"><span class="text-sm font-medium text-slate-800">${filename}</span><svg class="h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 9.707a1 1 0 011.414 0L9 11.086V3a1 1 0 112 0v8.086l1.293-1.379a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" /></svg></a>`;
             resultsList.appendChild(li);
         }
-
         function setLoadingState(isLoading) {
             submitButton.disabled = isLoading;
             document.getElementById('button-text').style.display = isLoading ? 'none' : 'inline';
@@ -197,10 +218,7 @@
         async function handleFormSubmit(event) {
             event.preventDefault();
             const files = fileInput.files;
-            if (!files || files.length === 0) {
-                alert('Please select one or more files.');
-                return;
-            }
+            if (!files || files.length === 0) { alert('Please select one or more files.'); return; }
             
             setLoadingState(true);
             toggleModal(true);
@@ -224,6 +242,7 @@
         async function processSingleFile(file, index, total) {
             logOutput.textContent += `--- Processing file ${index} of ${total}: ${file.name} ---\n`;
             
+            const accessToken = await auth0Client.getTokenSilently();
             const formData = new FormData();
             formData.append('file', file);
             formData.append('scorm_type', document.querySelector('input[name="scorm_type"]:checked').value);
@@ -232,13 +251,16 @@
             }
 
             try {
-                const response = await fetch('/api/process', { method: 'POST', body: formData });
+                const response = await fetch('/api/process', { 
+                    method: 'POST', 
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    body: formData 
+                });
                 if (!response.ok || !response.body) {
                     const errorData = await response.json().catch(() => ({error: 'Unknown server error'}));
-                    logOutput.textContent += `❌ ERROR: ${errorData.error}\n`;
+                    logOutput.textContent += `❌ ERROR: ${errorData.error || errorData.description}\n`;
                     return;
                 }
-
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
                 while (true) {
@@ -271,9 +293,13 @@
             downloadAllButton.textContent = 'Zipping...';
             downloadAllButton.disabled = true;
             try {
+                const accessToken = await auth0Client.getTokenSilently();
                 const response = await fetch('/api/batch_download', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}` 
+                    },
                     body: JSON.stringify({ filenames: processedFiles })
                 });
                 if (response.ok) {
@@ -295,8 +321,17 @@
             }
         }
         
-        // Initial state
-        toggleKnowBe4Option();
+        // --- App Initialization ---
+        window.onload = async () => {
+            auth0Client = await auth0.createAuth0Client(auth0Config);
+            const query = window.location.search;
+            if (query.includes("code=") && query.includes("state=")) {
+                await auth0Client.handleRedirectCallback();
+                window.history.replaceState({}, document.title, "/");
+            }
+            updateUI();
+            toggleKnowBe4Option();
+        };
 
     </script>
 

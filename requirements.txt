@@ -5,3 +5,5 @@ Flask
 gunicorn
 flask-cors
 gevent
+python-jose
+six

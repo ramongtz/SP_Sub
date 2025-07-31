@@ -21,6 +21,9 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from jose import jwt
 
+# --- NEW: Import and set up logging ---
+from logging_config import setup_logging
+
 # --- Auth0 Configuration ---
 AUTH0_DOMAIN = 'dev-b0houl2m3pgvvqbt.us.auth0.com'
 API_AUDIENCE = 'https://scorm-processor-api'
@@ -34,12 +37,15 @@ LOGO_FILENAME_IENGINE5 = "customer_logo.png"
 # --- Flask App Initialization ---
 app = Flask(__name__)
 CORS(app)
+
+# --- NEW: Setup logging from the external file ---
+setup_logging(app)
+
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['PROCESSED_FOLDER'] = 'processed'
 app.config['KNOWBE4_FILE_PATH'] = 'special_files/scorm_2004.js'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['PROCESSED_FOLDER'], exist_ok=True)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 # --- Authentication Decorator (Unchanged) ---
@@ -96,6 +102,7 @@ def requires_auth(f):
 # --- Generator-based helper functions ---
 def clean_unnecessary_files(directory):
     yield "[STEP] Cleaning unnecessary files and folders"
+    app.logger.info("Starting file cleanup process.")
     files_to_remove = ['aicc.*', 'readme.md', '.gitignore']
     dirs_to_remove = ['.idea', '.vscode', '__MACOSX']
     found_any = False
@@ -105,25 +112,36 @@ def clean_unnecessary_files(directory):
                 found_any = True; file_path = os.path.join(root, filename)
                 try:
                     os.remove(file_path)
-                    yield f"  -> Removed file: {os.path.relpath(file_path, directory)}"
+                    log_msg = f"Removed file: {os.path.relpath(file_path, directory)}"
+                    yield f"  -> {log_msg}"
+                    app.logger.info(log_msg)
                 except OSError as e:
-                    yield f"  -> [ERROR] removing file {os.path.relpath(file_path, directory)}: {e}"
+                    log_msg = f"Error removing file {os.path.relpath(file_path, directory)}: {e}"
+                    yield f"  -> [ERROR] {log_msg}"
+                    app.logger.error(log_msg)
         for dirname in list(dirs):
             if dirname in dirs_to_remove:
                 found_any = True; dir_path = os.path.join(root, dirname)
                 try:
                     shutil.rmtree(dir_path)
-                    yield f"  -> Removed directory: {os.path.relpath(dir_path, directory)}"
+                    log_msg = f"Removed directory: {os.path.relpath(dir_path, directory)}"
+                    yield f"  -> {log_msg}"
+                    app.logger.info(log_msg)
                     dirs.remove(dirname)
                 except OSError as e:
-                    yield f"  -> [ERROR] removing directory {os.path.relpath(dir_path, directory)}: {e}"
+                    log_msg = f"Error removing directory {os.path.relpath(dir_path, directory)}: {e}"
+                    yield f"  -> [ERROR] {log_msg}"
+                    app.logger.error(log_msg)
     if not found_any:
         yield "  -> No unnecessary files or folders found to clean."
+        app.logger.info("No unnecessary files found to clean.")
     yield "     ✅ SUCCESS: Cleanup complete."
+    app.logger.info("File cleanup process completed.")
 
 
 def edit_admin_settings(directory, scorm_version, engine_type, logo_details=None, license_key=None):
     yield f"[STEP] Finding and editing 'adminsettings.xml' files for SCORM {scorm_version}"
+    app.logger.info(f"Starting to edit adminsettings.xml files for SCORM {scorm_version}.")
     found_files = []
     for root, _, files in os.walk(directory):
         if 'adminsettings.xml' in files:
@@ -131,6 +149,7 @@ def edit_admin_settings(directory, scorm_version, engine_type, logo_details=None
             found_files.append(xml_path)
             relative_path = os.path.relpath(xml_path, directory)
             yield f"  -> Found '{relative_path}'. Applying changes..."
+            app.logger.info(f"Processing adminsettings.xml at: {relative_path}")
             try:
                 ET.register_namespace('', "http://www.w3.org/2001/XMLSchema")
                 tree = ET.parse(xml_path)
@@ -142,50 +161,58 @@ def edit_admin_settings(directory, scorm_version, engine_type, logo_details=None
                     element = xml_root.find(f".//{{*}}{tag_name}") or xml_root.find(tag_name)
                     if element is not None:
                         element.text = value
+                        app.logger.info(f"Set <{tag_name}> to '{value}' in {relative_path}")
                 
                 if logo_details:
                     path_to_set = logo_details['path']
-                    if engine_type == 'iengine5':
-                        tags_to_update = ['toplogo']
-                    else: # iengine6
-                        tags_to_update = ['TopLogo', 'CustomerLogo']
-                    
+                    tags_to_update = ['toplogo'] if engine_type == 'iengine5' else ['TopLogo', 'CustomerLogo']
                     for tag in tags_to_update:
                         logo_element = xml_root.find(f".//{{*}}{tag}") or xml_root.find(tag)
                         if logo_element is not None:
                             logo_element.text = path_to_set
                             yield f"  -> Set <{tag}> to '{path_to_set}'"
+                            app.logger.info(f"Set <{tag}> to '{path_to_set}' in {relative_path}")
 
                 if engine_type == 'iengine6' and license_key:
                     key_element = xml_root.find("KeyCode")
                     if key_element is None:
                         key_element = ET.SubElement(xml_root, "KeyCode")
                         yield f"  -> Created missing <KeyCode> tag."
+                        app.logger.info(f"Created missing <KeyCode> tag in {relative_path}")
                     key_element.text = license_key
                     yield f"  -> Set <KeyCode> with license key."
+                    app.logger.info(f"Set <KeyCode> in {relative_path}")
                     
-                    # --- FIX: Search for correct, case-sensitive tag "EnableCheck" ---
                     check_element = xml_root.find("EnableCheck")
                     if check_element is None:
                         check_element = ET.SubElement(xml_root, "EnableCheck")
                         yield f"  -> Created missing <EnableCheck> tag."
+                        app.logger.info(f"Created missing <EnableCheck> tag in {relative_path}")
                     check_element.text = "true"
                     yield f"  -> Set <EnableCheck> to 'true'."
+                    app.logger.info(f"Set <EnableCheck> to 'true' in {relative_path}")
 
                 tree.write(xml_path, encoding='utf-8', xml_declaration=True)
             except Exception as e:
-                yield f"  -> [ERROR] Failed to edit {relative_path}: {e}"
+                log_msg = f"Failed to edit {relative_path}: {e}"
+                yield f"  -> [ERROR] {log_msg}"
+                app.logger.error(log_msg)
     if not found_files:
         yield "     ⚠️ WARNING: No 'adminsettings.xml' files were found in the package."
+        app.logger.warning("No adminsettings.xml files found.")
     else:
         yield f"     ✅ SUCCESS: Processed {len(found_files)} 'adminsettings.xml' file(s)."
+        app.logger.info(f"Finished processing {len(found_files)} adminsettings.xml file(s).")
+
 
 def handle_branding(directory, logo_file_storage, engine_type, logo_filename):
     yield "[STEP] Processing branding logo"
+    app.logger.info("Starting branding process.")
     try:
         img = Image.open(logo_file_storage)
         if img.width != LOGO_WIDTH or img.height != LOGO_HEIGHT:
             yield f"  -> Resizing logo from {img.width}x{img.height} to {LOGO_WIDTH}x{LOGO_HEIGHT}px."
+            app.logger.info(f"Resizing logo to {LOGO_WIDTH}x{LOGO_HEIGHT}px.")
             img = img.resize((LOGO_WIDTH, LOGO_HEIGHT), Image.Resampling.LANCZOS)
         
         logo_details = {}
@@ -200,18 +227,25 @@ def handle_branding(directory, logo_file_storage, engine_type, logo_filename):
 
         os.makedirs(logo_dest_folder, exist_ok=True)
         img.save(logo_final_path, 'PNG')
-        yield f"  -> Saved logo to: {os.path.relpath(logo_final_path, directory)}"
+        log_msg = f"Saved logo to: {os.path.relpath(logo_final_path, directory)}"
+        yield f"  -> {log_msg}"
+        app.logger.info(log_msg)
         
         logo_details['path'] = logo_path_for_xml
         yield "     ✅ SUCCESS: Branding processed."
+        app.logger.info("Branding process completed successfully.")
         return logo_details
     except Exception as e:
+        app.logger.error(f"Branding failed: {e}", exc_info=True)
         raise ValueError(f"Could not process logo: {e}")
 
+
 def handle_license_key(directory, license_key):
-    yield "[STEP] Applying license key"
+    yield "[STEP] Applying license key for iengine5"
+    app.logger.info("Applying license key for iengine5.")
     data_xml_path = os.path.join(directory, 'js', 'data.xml')
     if not os.path.exists(data_xml_path):
+        app.logger.error("data.xml not found for iengine5.")
         raise ValueError("'data.xml' not found in js folder for iengine5 course.")
     
     try:
@@ -219,14 +253,19 @@ def handle_license_key(directory, license_key):
             f.write(license_key)
         yield "  -> Overwrote 'js/data.xml' with the new license key."
         yield "     ✅ SUCCESS: License key applied."
+        app.logger.info("Successfully wrote license key to js/data.xml.")
     except Exception as e:
+        app.logger.error(f"Failed to write license key: {e}", exc_info=True)
         raise ValueError(f"Could not write license key to data.xml: {e}")
+
 
 def edit_js_files_2004(js_folder_path, is_knowbe4):
     yield "[STEP] Editing JavaScript files for SCORM 2004"
+    app.logger.info("Starting JS file edits for SCORM 2004.")
     scorm_2004_js_path = os.path.join(js_folder_path, 'scorm_2004.js')
     if is_knowbe4:
         yield "  -> KnowBe4 option selected. Replacing scorm_2004.js..."
+        app.logger.info("KnowBe4 option selected. Replacing scorm_2004.js.")
         knowbe4_special_file = app.config['KNOWBE4_FILE_PATH']
         if not os.path.exists(knowbe4_special_file):
             raise ValueError(f"Special KnowBe4 file not found on server at: {knowbe4_special_file}")
@@ -235,10 +274,13 @@ def edit_js_files_2004(js_folder_path, is_knowbe4):
         try:
             shutil.copyfile(knowbe4_special_file, scorm_2004_js_path)
             yield "     ✅ SUCCESS: Replaced scorm_2004.js with KnowBe4 version."
+            app.logger.info("Successfully replaced scorm_2004.js with KnowBe4 version.")
         except Exception as e:
+            app.logger.error(f"Failed to replace scorm_2004.js: {e}", exc_info=True)
             raise ValueError(f"Could not replace scorm_2004.js: {e}")
     else:
         yield "  -> Standard processing. Replacing LMSCommit() with SCORM2004_CallCommit()..."
+        app.logger.info("Standard SCORM 2004 processing.")
         if os.path.exists(scorm_2004_js_path):
             with open(scorm_2004_js_path, 'r+', encoding='utf-8') as f:
                 content = f.read()
@@ -246,16 +288,23 @@ def edit_js_files_2004(js_folder_path, is_knowbe4):
                 if content != new_content:
                     f.seek(0); f.write(new_content); f.truncate()
                     yield "     ✅ SUCCESS: Replacement complete."
+                    app.logger.info("Successfully replaced LMSCommit() in scorm_2004.js.")
                 else:
                     yield "     ⚠️ WARNING: 'LMSCommit()' not found. No changes made."
+                    app.logger.warning("'LMSCommit()' not found in scorm_2004.js.")
         else:
             yield "     ⚠️ WARNING: 'scorm_2004.js' not found. Skipping."
+            app.logger.warning("scorm_2004.js not found, skipping edit.")
     yield "     ✅ SUCCESS: JS file edits complete."
+    app.logger.info("JS file edits for SCORM 2004 completed.")
 
 
 # --- Main processing stream ---
 def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_data=None, logo_filename=None, license_key=None):
     base_name = os.path.basename(zip_path)
+    app.logger.info(f"--- Starting new processing job for: {base_name} ---")
+    app.logger.info(f"Parameters: SCORM Type='{scorm_type}', KnowBe4='{is_knowbe4}', Logo Provided='{logo_data is not None}', License Key Provided='{license_key is not None}'")
+    
     temp_extract_dir = os.path.join(output_dir, f"_temp_{base_name}")
     if os.path.exists(temp_extract_dir): shutil.rmtree(temp_extract_dir)
     os.makedirs(temp_extract_dir)
@@ -266,13 +315,16 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_da
     try:
         def main_processing_flow():
             yield f"[STEP] Unzipping '{base_name}'"
+            app.logger.info(f"Unzipping {base_name} to {temp_extract_dir}")
             with zipfile.ZipFile(zip_path, 'r') as zip_ref:
                 zip_ref.extractall(temp_extract_dir)
             yield "     ✅ SUCCESS: Package unzipped."
+            app.logger.info("Unzipping complete.")
             
             is_iengine5 = os.path.exists(os.path.join(temp_extract_dir, 'scorm'))
             engine_type = 'iengine5' if is_iengine5 else 'iengine6'
             yield f"  -> Engine Type detected: {engine_type}"
+            app.logger.info(f"Detected engine type: {engine_type}")
 
             yield from clean_unnecessary_files(temp_extract_dir)
             
@@ -291,50 +343,61 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_da
                 if engine_type == 'iengine5':
                     yield from handle_license_key(temp_extract_dir, license_key)
             
+            app.logger.info("Validating manifest files.")
             yield "[STEP] Validating manifest files"
             manifest_path = os.path.join(temp_extract_dir, 'imsmanifest.xml')
             manifest_2004_path = os.path.join(temp_extract_dir, 'imsmanifest_SCORM2004.xml')
             if not (os.path.exists(manifest_path) and os.path.exists(manifest_2004_path)):
+                app.logger.error("Manifest validation failed.")
                 raise ValueError("Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCORM2004.xml'.")
             yield "     ✅ SUCCESS: Both manifest files found."
+            app.logger.info("Manifests validated.")
+
             if scorm_type == '2004':
                 yield "[STEP] Updating manifest for SCORM 2004"
+                app.logger.info("Updating manifest for SCORM 2004.")
                 os.remove(manifest_path); os.rename(manifest_2004_path, manifest_path)
             elif scorm_type == '1.2':
                 yield "[STEP] Updating manifest for SCORM 1.2"
+                app.logger.info("Updating manifest for SCORM 1.2.")
                 os.remove(manifest_2004_path)
             yield "     ✅ SUCCESS: Manifest updated."
+            app.logger.info("Manifest update complete.")
             
             yield from edit_admin_settings(temp_extract_dir, scorm_type, engine_type, logo_details, license_key)
 
             if scorm_type == '2004':
                 js_folder = os.path.join(temp_extract_dir, 'js')
                 yield from edit_js_files_2004(js_folder, is_knowbe4)
+
             yield "[STEP] Re-zipping the package"
+            app.logger.info("Re-zipping the package.")
             new_zip_name = base_name.replace('.zip', f'_processed_{scorm_type}.zip')
             new_zip_path = os.path.join(output_dir, new_zip_name)
             shutil.make_archive(new_zip_path.replace('.zip', ''), 'zip', temp_extract_dir)
             yield f"     ✅ SUCCESS: Created {new_zip_name}"
+            app.logger.info(f"Successfully created processed file: {new_zip_name}")
             return new_zip_name
+        
         flow = main_processing_flow()
         final_filename = None
         while True:
             try:
                 log_line = next(flow)
-                app.logger.info(log_line)
                 yield format_sse(log_line)
-                time.sleep(0.1)
             except StopIteration as e:
                 final_filename = e.value
                 break
         if final_filename:
             download_url = f"/download/{final_filename}"
             yield format_sse(f'{{"url": "{download_url}", "filename": "{final_filename}"}}', 'done')
+            app.logger.info(f"--- Successfully finished processing job for: {base_name} ---")
     except Exception as e:
-        app.logger.error(f"Processing failed: {e}", exc_info=True)
+        app.logger.error(f"--- Processing job for {base_name} failed: {e} ---", exc_info=True)
         yield format_sse(f'{{"message": "FATAL ERROR: {str(e)}"}}', 'error')
     finally:
-        if os.path.exists(temp_extract_dir): shutil.rmtree(temp_extract_dir)
+        if os.path.exists(temp_extract_dir):
+            shutil.rmtree(temp_extract_dir)
 
 
 # --- API Endpoints ---

@@ -122,7 +122,7 @@ def clean_unnecessary_files(directory):
     yield "     ✅ SUCCESS: Cleanup complete."
 
 
-def edit_admin_settings(directory, scorm_version, engine_type, logo_details=None):
+def edit_admin_settings(directory, scorm_version, engine_type, logo_details=None, license_key=None):
     yield f"[STEP] Finding and editing 'adminsettings.xml' files for SCORM {scorm_version}"
     found_files = []
     for root, _, files in os.walk(directory):
@@ -156,6 +156,22 @@ def edit_admin_settings(directory, scorm_version, engine_type, logo_details=None
                             logo_element.text = path_to_set
                             yield f"  -> Set <{tag}> to '{path_to_set}'"
 
+                if engine_type == 'iengine6' and license_key:
+                    key_element = xml_root.find("KeyCode")
+                    if key_element is None:
+                        key_element = ET.SubElement(xml_root, "KeyCode")
+                        yield f"  -> Created missing <KeyCode> tag."
+                    key_element.text = license_key
+                    yield f"  -> Set <KeyCode> with license key."
+                    
+                    # --- FIX: Search for correct, case-sensitive tag "EnableCheck" ---
+                    check_element = xml_root.find("EnableCheck")
+                    if check_element is None:
+                        check_element = ET.SubElement(xml_root, "EnableCheck")
+                        yield f"  -> Created missing <EnableCheck> tag."
+                    check_element.text = "true"
+                    yield f"  -> Set <EnableCheck> to 'true'."
+
                 tree.write(xml_path, encoding='utf-8', xml_declaration=True)
             except Exception as e:
                 yield f"  -> [ERROR] Failed to edit {relative_path}: {e}"
@@ -167,24 +183,19 @@ def edit_admin_settings(directory, scorm_version, engine_type, logo_details=None
 def handle_branding(directory, logo_file_storage, engine_type, logo_filename):
     yield "[STEP] Processing branding logo"
     try:
-        # 1. Validate and resize image
         img = Image.open(logo_file_storage)
         if img.width != LOGO_WIDTH or img.height != LOGO_HEIGHT:
             yield f"  -> Resizing logo from {img.width}x{img.height} to {LOGO_WIDTH}x{LOGO_HEIGHT}px."
             img = img.resize((LOGO_WIDTH, LOGO_HEIGHT), Image.Resampling.LANCZOS)
         
         logo_details = {}
-        
-        # 2. Place logo and define path based on engine type
         if engine_type == 'iengine5':
             logo_dest_folder = os.path.join(directory, 'skins', 'black-unique', 'skinimages')
             logo_final_path = os.path.join(logo_dest_folder, LOGO_FILENAME_IENGINE5)
-            # For iengine5, path is absolute from the course root
             logo_path_for_xml = 'skins/black-unique/skinimages/' + LOGO_FILENAME_IENGINE5
         else: # iengine6
             logo_dest_folder = os.path.join(directory, 'xmls')
             logo_final_path = os.path.join(logo_dest_folder, logo_filename)
-            # --- FIX: Prepend ../ to create a correct relative path ---
             logo_path_for_xml = '../' + logo_filename
 
         os.makedirs(logo_dest_folder, exist_ok=True)
@@ -194,9 +205,22 @@ def handle_branding(directory, logo_file_storage, engine_type, logo_filename):
         logo_details['path'] = logo_path_for_xml
         yield "     ✅ SUCCESS: Branding processed."
         return logo_details
-
     except Exception as e:
         raise ValueError(f"Could not process logo: {e}")
+
+def handle_license_key(directory, license_key):
+    yield "[STEP] Applying license key"
+    data_xml_path = os.path.join(directory, 'js', 'data.xml')
+    if not os.path.exists(data_xml_path):
+        raise ValueError("'data.xml' not found in js folder for iengine5 course.")
+    
+    try:
+        with open(data_xml_path, 'w', encoding='utf-8') as f:
+            f.write(license_key)
+        yield "  -> Overwrote 'js/data.xml' with the new license key."
+        yield "     ✅ SUCCESS: License key applied."
+    except Exception as e:
+        raise ValueError(f"Could not write license key to data.xml: {e}")
 
 def edit_js_files_2004(js_folder_path, is_knowbe4):
     yield "[STEP] Editing JavaScript files for SCORM 2004"
@@ -230,7 +254,7 @@ def edit_js_files_2004(js_folder_path, is_knowbe4):
 
 
 # --- Main processing stream ---
-def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_data=None, logo_filename=None):
+def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_data=None, logo_filename=None, license_key=None):
     base_name = os.path.basename(zip_path)
     temp_extract_dir = os.path.join(output_dir, f"_temp_{base_name}")
     if os.path.exists(temp_extract_dir): shutil.rmtree(temp_extract_dir)
@@ -246,7 +270,6 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_da
                 zip_ref.extractall(temp_extract_dir)
             yield "     ✅ SUCCESS: Package unzipped."
             
-            # --- DETECT ENGINE AND LOG ---
             is_iengine5 = os.path.exists(os.path.join(temp_extract_dir, 'scorm'))
             engine_type = 'iengine5' if is_iengine5 else 'iengine6'
             yield f"  -> Engine Type detected: {engine_type}"
@@ -264,6 +287,10 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_da
                         logo_details = e.value
                         break
             
+            if license_key:
+                if engine_type == 'iengine5':
+                    yield from handle_license_key(temp_extract_dir, license_key)
+            
             yield "[STEP] Validating manifest files"
             manifest_path = os.path.join(temp_extract_dir, 'imsmanifest.xml')
             manifest_2004_path = os.path.join(temp_extract_dir, 'imsmanifest_SCORM2004.xml')
@@ -278,7 +305,7 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_da
                 os.remove(manifest_2004_path)
             yield "     ✅ SUCCESS: Manifest updated."
             
-            yield from edit_admin_settings(temp_extract_dir, scorm_type, engine_type, logo_details)
+            yield from edit_admin_settings(temp_extract_dir, scorm_type, engine_type, logo_details, license_key)
 
             if scorm_type == '2004':
                 js_folder = os.path.join(temp_extract_dir, 'js')
@@ -320,6 +347,8 @@ def process_scorm_file(jwt_payload):
     logo_file = request.files.get('logo', None)
     scorm_type = request.form.get('scorm_type', '2004')
     is_knowbe4 = request.form.get('is_knowbe4') == 'true'
+    license_key = request.form.get('license_key', None)
+
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
     if scorm_type not in ['1.2', '2004']:
@@ -334,7 +363,7 @@ def process_scorm_file(jwt_payload):
         logo_filename = secure_filename(logo_file.filename)
         logo_data = io.BytesIO(logo_file.read())
 
-    return Response(process_package_stream(upload_path, app.config['PROCESSED_FOLDER'], scorm_type, is_knowbe4, logo_data, logo_filename), mimetype='text/event-stream')
+    return Response(process_package_stream(upload_path, app.config['PROCESSED_FOLDER'], scorm_type, is_knowbe4, logo_data, logo_filename, license_key), mimetype='text/event-stream')
 
 @app.route('/download/<path:filename>')
 @requires_auth

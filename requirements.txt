@@ -1,10 +1,10 @@
 # requirements.txt
-# --- List of Python dependencies ---
+# --- List of Python dependencies with updated, secure versions ---
 
-Flask
-gunicorn
-flask-cors
-gevent
-python-jose
-six
-Pillow
+Flask==3.0.3
+gunicorn==23.0.0
+flask-cors==6.0.1
+gevent==24.2.1
+python-jose==3.4.0
+six==1.16.0
+Pillow==10.4.0

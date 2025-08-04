@@ -131,7 +131,6 @@
         const submitButton = document.getElementById('submit-button');
         const fileInput = document.getElementById('file-input');
         const logoInput = document.getElementById('logo-input');
-        // --- NEW: License Key Input ---
         const licenseKeyInput = document.getElementById('license-key-input');
         const dropZone = document.getElementById('file-drop-zone');
         const fileNameDisplay = document.getElementById('file-name-display');
@@ -224,6 +223,18 @@
         }
 
         // --- Core Logic ---
+        // --- NEW: Hardened fetch function with timeout ---
+        async function fetchWithTimeout(resource, options = {}, timeout = 30000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            const response = await fetch(resource, {
+                ...options,
+                signal: controller.signal  
+            });
+            clearTimeout(id);
+            return response;
+        }
+        
         async function handleDownloadClick(event) {
             event.preventDefault();
             const target = event.currentTarget;
@@ -233,7 +244,8 @@
 
             try {
                 const accessToken = await auth0Client.getTokenSilently();
-                const response = await fetch(url, {
+                // --- MODIFIED: Use fetchWithTimeout ---
+                const response = await fetchWithTimeout(url, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
@@ -250,10 +262,19 @@
                     link.remove();
                     window.URL.revokeObjectURL(downloadUrl);
                 } else {
-                    alert('Download failed. You may need to log in again.');
+                    const errorData = await response.json().catch(() => ({ description: "An unknown error occurred." }));
+                    logOutput.textContent += `\n❌ DOWNLOAD ERROR: ${errorData.description}\n`;
+                    toggleModal(true);
                 }
             } catch (error) {
-                alert('An error occurred during download. Please try again.');
+                let errorMessage = 'An unknown error occurred during download.';
+                if (error.name === 'AbortError') {
+                    errorMessage = 'The download request timed out.';
+                } else if (error.name === 'TypeError') {
+                    errorMessage = 'A network error occurred. Please check your connection.';
+                }
+                logOutput.textContent += `\n❌ DOWNLOAD ERROR: ${errorMessage}\n`;
+                toggleModal(true);
             } finally {
                  target.innerHTML = `<span class="text-sm font-medium text-slate-800">${filename}</span><svg class="h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 9.707a1 1 0 011.414 0L9 11.086V3a1 1 0 112 0v8.086l1.293-1.379a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" /></svg>`;
             }
@@ -264,7 +285,11 @@
             const files = fileInput.files;
             const logoFile = logoInput.files[0];
             const licenseKey = licenseKeyInput.value;
-            if (!files || files.length === 0) { alert('Please select one or more files.'); return; }
+            if (!files || files.length === 0) { 
+                toggleModal(true);
+                logOutput.textContent = '❌ ERROR: Please select one or more SCORM package files to process.';
+                return; 
+            }
             
             setLoadingState(true);
             toggleModal(true);
@@ -288,31 +313,33 @@
         async function processSingleFile(file, index, total, logoFile, licenseKey) {
             logOutput.textContent += `--- Processing file ${index} of ${total}: ${file.name} ---\n`;
             
-            const accessToken = await auth0Client.getTokenSilently();
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('scorm_type', document.querySelector('input[name="scorm_type"]:checked').value);
-            if (document.getElementById('is_knowbe4').checked) {
-                formData.append('is_knowbe4', 'true');
-            }
-            if (logoFile) {
-                formData.append('logo', logoFile);
-            }
-            if (licenseKey) {
-                formData.append('license_key', licenseKey);
-            }
-
             try {
-                const response = await fetch('/api/process', { 
+                const accessToken = await auth0Client.getTokenSilently();
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('scorm_type', document.querySelector('input[name="scorm_type"]:checked').value);
+                if (document.getElementById('is_knowbe4').checked) {
+                    formData.append('is_knowbe4', 'true');
+                }
+                if (logoFile) {
+                    formData.append('logo', logoFile);
+                }
+                if (licenseKey) {
+                    formData.append('license_key', licenseKey);
+                }
+
+                // --- MODIFIED: Use fetchWithTimeout ---
+                const response = await fetchWithTimeout('/api/process', { 
                     method: 'POST', 
                     headers: { Authorization: `Bearer ${accessToken}` },
                     body: formData 
                 });
+
                 if (!response.ok || !response.body) {
-                    const errorData = await response.json().catch(() => ({error: 'Unknown server error'}));
-                    logOutput.textContent += `❌ ERROR: ${errorData.error || errorData.description}\n`;
-                    return;
+                    const errorData = await response.json().catch(() => ({error: 'The server returned an invalid response.'}));
+                    throw new Error(errorData.error || errorData.description);
                 }
+                
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
                 while (true) {
@@ -335,7 +362,14 @@
                     }
                 }
             } catch (error) {
-                logOutput.textContent += `\n❌ NETWORK ERROR processing ${file.name}. Is the service running?\n`;
+                let errorMessage = error.message;
+                if (error.name === 'AbortError') {
+                    errorMessage = 'The server is taking too long to respond. The request has timed out.';
+                } else if (error.name === 'TypeError') {
+                    errorMessage = 'A network error occurred. Please check your connection or if the backend service is running.';
+                }
+                logOutput.textContent += `\n❌ FATAL ERROR processing ${file.name}: ${errorMessage}\n`;
+                logOutput.scrollTop = logOutput.scrollHeight;
             }
             logOutput.textContent += `--- Finished processing ${file.name} ---\n\n`;
         }
@@ -346,7 +380,8 @@
             downloadAllButton.disabled = true;
             try {
                 const accessToken = await auth0Client.getTokenSilently();
-                const response = await fetch('/api/batch_download', {
+                // --- MODIFIED: Use fetchWithTimeout ---
+                const response = await fetchWithTimeout('/api/batch_download', {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
@@ -363,10 +398,19 @@
                     link.click();
                     document.body.removeChild(link);
                 } else {
-                    alert('Failed to create batch download.');
+                    const errorData = await response.json().catch(() => ({ error: 'Failed to create batch download.' }));
+                    logOutput.textContent += `\n❌ BATCH DOWNLOAD ERROR: ${errorData.error}\n`;
+                    toggleModal(true);
                 }
             } catch (error) {
-                alert('Network error during batch download.');
+                let errorMessage = 'An unknown error occurred during batch download.';
+                if (error.name === 'AbortError') {
+                    errorMessage = 'The batch download request timed out.';
+                } else if (error.name === 'TypeError') {
+                    errorMessage = 'A network error occurred. Please check your connection.';
+                }
+                logOutput.textContent += `\n❌ BATCH DOWNLOAD ERROR: ${errorMessage}\n`;
+                toggleModal(true);
             } finally {
                 downloadAllButton.textContent = 'Download All (.zip)';
                 downloadAllButton.disabled = false;

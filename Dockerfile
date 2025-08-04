@@ -1,26 +1,48 @@
 # Dockerfile
-# --- Instructions to build the container ---
+# --- Instructions to build a secure, multi-stage container ---
 
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
+# --- Stage 1: The Builder ---
+# --- MODIFIED: Use a more recent, secure base image ---
+FROM python:3.12-slim as builder
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
+
+# Install OS-level build dependencies that might be needed
+RUN apt-get update && apt-get install -y --no-install-recommends gcc build-essential && rm -rf /var/lib/apt/lists/*
+
+# Upgrade core packaging tools first
+RUN pip install --no-cache-dir --upgrade pip setuptools
+
+# Copy only the requirements file to leverage Docker cache
+COPY requirements.txt .
+
+# Install the Python dependencies
+# Using --upgrade-strategy eager ensures that dependencies are upgraded
+RUN pip install --no-cache-dir --upgrade-strategy eager -r requirements.txt
+
+
+# --- Stage 2: The Final Image ---
+# --- MODIFIED: Use the same more recent, secure base image ---
+FROM python:3.12-slim
+
+# Set the working directory
+WORKDIR /app
+
+# Apply OS-level security patches to the final image
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user
 RUN addgroup --system app && adduser --system --group app
 
-# Copy the requirements file into the container at /app
-COPY requirements.txt .
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# --- MODIFIED: Update Python version in path ---
+# --- Copy installed packages AND executables from the builder stage ---
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Copy the application code
+# Copy the rest of the application code
 COPY app.py .
-# --- FIX: Add this line to copy the new logging configuration ---
 COPY logging_config.py .
-
-# Copy the special KnowBe4 file into the container
 COPY special_files/ ./special_files/
 
 # Change the owner of the /app directory to our new user
@@ -29,8 +51,8 @@ RUN chown -R app:app /app
 # Switch to the non-root user
 USER app
 
-# Make port 8080 available to the world outside this container
+# Make port 8080 available
 EXPOSE 8080
 
-# Run the app with Gunicorn and a gevent worker for better streaming
+# Run the app with Gunicorn
 CMD ["gunicorn", "--worker-class", "gevent", "--bind", "0.0.0.0:8080", "app:app"]

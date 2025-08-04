@@ -8,3 +8,4 @@ gevent==24.2.1
 python-jose==3.4.0
 six==1.16.0
 Pillow==10.4.0
+Flask-Limiter==3.5.0

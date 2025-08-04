@@ -1,3 +1,220 @@
 2025-08-04 15:51:28,380 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
 2025-08-04 16:11:52,229 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
 2025-08-04 16:20:50,825 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 16:38:34,731 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 16:55:57,086 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 17:00:49,150 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 17:11:14,569 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 17:11:52,583 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 17:12:59,277 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 17:20:32,135 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 17:23:07,572 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 17:23:42,820 - INFO - [in /app/app.py:333] - --- Starting new processing job for: 2025_-_S-161-ES__Email_and_Instant_Messaging_Secur_20250711192313_processed_1.2.zip ---
+2025-08-04 17:23:42,821 - INFO - [in /app/app.py:334] - Parameters: SCORM Type='1.2', KnowBe4='False', Logo Provided='False', License Key Provided='False'
+2025-08-04 17:23:42,823 - INFO - [in /app/app.py:346] - Unzipping 2025_-_S-161-ES__Email_and_Instant_Messaging_Secur_20250711192313_processed_1.2.zip to processed/_temp_2025_-_S-161-ES__Email_and_Instant_Messaging_Secur_20250711192313_processed_1.2.zip
+2025-08-04 17:23:43,862 - INFO - [in /app/app.py:350] - Unzipping complete.
+2025-08-04 17:23:43,863 - INFO - [in /app/app.py:355] - Detected engine type: iengine5
+2025-08-04 17:23:43,864 - INFO - [in /app/app.py:133] - Starting file cleanup process.
+2025-08-04 17:23:43,875 - INFO - [in /app/app.py:145] - Removed file: README.md
+2025-08-04 17:23:43,876 - INFO - [in /app/app.py:167] - File cleanup process completed.
+2025-08-04 17:23:43,876 - INFO - [in /app/app.py:374] - Validating manifest files.
+2025-08-04 17:23:43,877 - ERROR - [in /app/app.py:379] - Manifest validation failed.
+2025-08-04 17:23:43,877 - ERROR - [in /app/app.py:424] - --- Processing job for 2025_-_S-161-ES__Email_and_Instant_Messaging_Secur_20250711192313_processed_1.2.zip failed: Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCORM2004.xml'. ---
+Traceback (most recent call last):
+  File "/app/app.py", line 414, in process_package_stream
+    log_line = next(flow)
+               ^^^^^^^^^^
+  File "/app/app.py", line 380, in main_processing_flow
+    raise ValueError("Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCORM2004.xml'.")
+ValueError: Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCORM2004.xml'.
+2025-08-04 17:23:45,327 - INFO - [in /app/app.py:333] - --- Starting new processing job for: 2025_-_S-161-IR__Incident_Reporting-ITS_Logistics_20250711192425.zip ---
+2025-08-04 17:23:45,328 - INFO - [in /app/app.py:334] - Parameters: SCORM Type='1.2', KnowBe4='False', Logo Provided='False', License Key Provided='False'
+2025-08-04 17:23:45,329 - INFO - [in /app/app.py:346] - Unzipping 2025_-_S-161-IR__Incident_Reporting-ITS_Logistics_20250711192425.zip to processed/_temp_2025_-_S-161-IR__Incident_Reporting-ITS_Logistics_20250711192425.zip
+2025-08-04 17:23:47,772 - INFO - [in /app/app.py:350] - Unzipping complete.
+2025-08-04 17:23:47,773 - INFO - [in /app/app.py:355] - Detected engine type: iengine5
+2025-08-04 17:23:47,774 - INFO - [in /app/app.py:133] - Starting file cleanup process.
+2025-08-04 17:23:47,805 - INFO - [in /app/app.py:145] - Removed file: README.md
+2025-08-04 17:23:47,806 - INFO - [in /app/app.py:167] - File cleanup process completed.
+2025-08-04 17:23:47,807 - INFO - [in /app/app.py:374] - Validating manifest files.
+2025-08-04 17:23:47,807 - INFO - [in /app/app.py:382] - Manifests validated.
+2025-08-04 17:23:47,808 - INFO - [in /app/app.py:390] - Updating manifest for SCORM 1.2.
+2025-08-04 17:23:47,809 - INFO - [in /app/app.py:393] - Manifest update complete.
+2025-08-04 17:23:47,809 - INFO - [in /app/app.py:172] - Starting to edit adminsettings.xml files for SCORM 1.2.
+2025-08-04 17:23:47,811 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/ru/adminsettings.xml
+2025-08-04 17:23:47,813 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/ru/adminsettings.xml
+2025-08-04 17:23:47,814 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/ru/adminsettings.xml
+2025-08-04 17:23:47,815 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/ru/adminsettings.xml
+2025-08-04 17:23:47,816 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/ru/adminsettings.xml
+2025-08-04 17:23:47,817 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/ru/adminsettings.xml
+2025-08-04 17:23:47,818 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/ru/adminsettings.xml
+2025-08-04 17:23:47,821 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/fr-CA/adminsettings.xml
+2025-08-04 17:23:47,822 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/fr-CA/adminsettings.xml
+2025-08-04 17:23:47,823 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/fr-CA/adminsettings.xml
+2025-08-04 17:23:47,824 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/fr-CA/adminsettings.xml
+2025-08-04 17:23:47,824 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/fr-CA/adminsettings.xml
+2025-08-04 17:23:47,825 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/fr-CA/adminsettings.xml
+2025-08-04 17:23:47,825 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/fr-CA/adminsettings.xml
+2025-08-04 17:23:47,827 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/de/adminsettings.xml
+2025-08-04 17:23:47,828 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/de/adminsettings.xml
+2025-08-04 17:23:47,829 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/de/adminsettings.xml
+2025-08-04 17:23:47,829 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/de/adminsettings.xml
+2025-08-04 17:23:47,829 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/de/adminsettings.xml
+2025-08-04 17:23:47,830 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/de/adminsettings.xml
+2025-08-04 17:23:47,830 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/de/adminsettings.xml
+2025-08-04 17:23:47,833 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/no/adminsettings.xml
+2025-08-04 17:23:47,834 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/no/adminsettings.xml
+2025-08-04 17:23:47,835 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/no/adminsettings.xml
+2025-08-04 17:23:47,836 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/no/adminsettings.xml
+2025-08-04 17:23:47,837 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/no/adminsettings.xml
+2025-08-04 17:23:47,837 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/no/adminsettings.xml
+2025-08-04 17:23:47,837 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/no/adminsettings.xml
+2025-08-04 17:23:47,839 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/ja/adminsettings.xml
+2025-08-04 17:23:47,840 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/ja/adminsettings.xml
+2025-08-04 17:23:47,841 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/ja/adminsettings.xml
+2025-08-04 17:23:47,841 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/ja/adminsettings.xml
+2025-08-04 17:23:47,842 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/ja/adminsettings.xml
+2025-08-04 17:23:47,843 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/ja/adminsettings.xml
+2025-08-04 17:23:47,843 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/ja/adminsettings.xml
+2025-08-04 17:23:47,846 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/ko/adminsettings.xml
+2025-08-04 17:23:47,846 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/ko/adminsettings.xml
+2025-08-04 17:23:47,847 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/ko/adminsettings.xml
+2025-08-04 17:23:47,848 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/ko/adminsettings.xml
+2025-08-04 17:23:47,849 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/ko/adminsettings.xml
+2025-08-04 17:23:47,849 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/ko/adminsettings.xml
+2025-08-04 17:23:47,851 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/ko/adminsettings.xml
+2025-08-04 17:23:47,853 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/zh-TW/adminsettings.xml
+2025-08-04 17:23:47,854 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/zh-TW/adminsettings.xml
+2025-08-04 17:23:47,855 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/zh-TW/adminsettings.xml
+2025-08-04 17:23:47,856 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/zh-TW/adminsettings.xml
+2025-08-04 17:23:47,856 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/zh-TW/adminsettings.xml
+2025-08-04 17:23:47,857 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/zh-TW/adminsettings.xml
+2025-08-04 17:23:47,857 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/zh-TW/adminsettings.xml
+2025-08-04 17:23:47,859 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/da/adminsettings.xml
+2025-08-04 17:23:47,861 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/da/adminsettings.xml
+2025-08-04 17:23:47,861 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/da/adminsettings.xml
+2025-08-04 17:23:47,862 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/da/adminsettings.xml
+2025-08-04 17:23:47,862 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/da/adminsettings.xml
+2025-08-04 17:23:47,863 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/da/adminsettings.xml
+2025-08-04 17:23:47,863 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/da/adminsettings.xml
+2025-08-04 17:23:47,865 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/sv/adminsettings.xml
+2025-08-04 17:23:47,867 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/sv/adminsettings.xml
+2025-08-04 17:23:47,868 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/sv/adminsettings.xml
+2025-08-04 17:23:47,869 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/sv/adminsettings.xml
+2025-08-04 17:23:47,869 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/sv/adminsettings.xml
+2025-08-04 17:23:47,870 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/sv/adminsettings.xml
+2025-08-04 17:23:47,870 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/sv/adminsettings.xml
+2025-08-04 17:23:47,873 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/pt-BR/adminsettings.xml
+2025-08-04 17:23:47,874 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/pt-BR/adminsettings.xml
+2025-08-04 17:23:47,875 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/pt-BR/adminsettings.xml
+2025-08-04 17:23:47,876 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/pt-BR/adminsettings.xml
+2025-08-04 17:23:47,876 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/pt-BR/adminsettings.xml
+2025-08-04 17:23:47,877 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/pt-BR/adminsettings.xml
+2025-08-04 17:23:47,878 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/pt-BR/adminsettings.xml
+2025-08-04 17:23:47,880 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-08-04 17:23:47,881 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-08-04 17:23:47,882 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/en/adminsettings.xml
+2025-08-04 17:23:47,883 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/en/adminsettings.xml
+2025-08-04 17:23:47,884 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-08-04 17:23:47,885 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-08-04 17:23:47,886 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-08-04 17:23:47,888 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/es-LA/adminsettings.xml
+2025-08-04 17:23:47,889 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/es-LA/adminsettings.xml
+2025-08-04 17:23:47,890 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/es-LA/adminsettings.xml
+2025-08-04 17:23:47,890 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/es-LA/adminsettings.xml
+2025-08-04 17:23:47,891 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/es-LA/adminsettings.xml
+2025-08-04 17:23:47,892 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/es-LA/adminsettings.xml
+2025-08-04 17:23:47,892 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/es-LA/adminsettings.xml
+2025-08-04 17:23:47,894 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/fr/adminsettings.xml
+2025-08-04 17:23:47,895 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/fr/adminsettings.xml
+2025-08-04 17:23:47,896 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/fr/adminsettings.xml
+2025-08-04 17:23:47,896 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/fr/adminsettings.xml
+2025-08-04 17:23:47,897 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/fr/adminsettings.xml
+2025-08-04 17:23:47,897 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/fr/adminsettings.xml
+2025-08-04 17:23:47,898 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/fr/adminsettings.xml
+2025-08-04 17:23:47,901 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/en-GB/adminsettings.xml
+2025-08-04 17:23:47,902 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/en-GB/adminsettings.xml
+2025-08-04 17:23:47,903 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/en-GB/adminsettings.xml
+2025-08-04 17:23:47,904 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/en-GB/adminsettings.xml
+2025-08-04 17:23:47,904 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/en-GB/adminsettings.xml
+2025-08-04 17:23:47,905 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/en-GB/adminsettings.xml
+2025-08-04 17:23:47,905 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/en-GB/adminsettings.xml
+2025-08-04 17:23:47,907 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/zh-CN/adminsettings.xml
+2025-08-04 17:23:47,908 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/zh-CN/adminsettings.xml
+2025-08-04 17:23:47,909 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/zh-CN/adminsettings.xml
+2025-08-04 17:23:47,909 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/zh-CN/adminsettings.xml
+2025-08-04 17:23:47,910 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/zh-CN/adminsettings.xml
+2025-08-04 17:23:47,910 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/zh-CN/adminsettings.xml
+2025-08-04 17:23:47,911 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/zh-CN/adminsettings.xml
+2025-08-04 17:23:47,912 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/es/adminsettings.xml
+2025-08-04 17:23:47,913 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/es/adminsettings.xml
+2025-08-04 17:23:47,914 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/es/adminsettings.xml
+2025-08-04 17:23:47,915 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/es/adminsettings.xml
+2025-08-04 17:23:47,916 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/es/adminsettings.xml
+2025-08-04 17:23:47,917 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/es/adminsettings.xml
+2025-08-04 17:23:47,918 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/es/adminsettings.xml
+2025-08-04 17:23:47,921 - INFO - [in /app/app.py:180] - Processing adminsettings.xml at: xmls/it/adminsettings.xml
+2025-08-04 17:23:47,922 - INFO - [in /app/app.py:192] - Set <UseScorm> to 'true' in xmls/it/adminsettings.xml
+2025-08-04 17:23:47,923 - INFO - [in /app/app.py:192] - Set <UseScormVersion12> to 'true' in xmls/it/adminsettings.xml
+2025-08-04 17:23:47,923 - INFO - [in /app/app.py:192] - Set <UseScormVersion2004> to 'false' in xmls/it/adminsettings.xml
+2025-08-04 17:23:47,924 - INFO - [in /app/app.py:192] - Set <URLOnExit> to '' in xmls/it/adminsettings.xml
+2025-08-04 17:23:47,924 - INFO - [in /app/app.py:192] - Set <ReviewMode> to 'false' in xmls/it/adminsettings.xml
+2025-08-04 17:23:47,925 - INFO - [in /app/app.py:192] - Set <HostedOniLMS> to 'false' in xmls/it/adminsettings.xml
+2025-08-04 17:23:47,927 - INFO - [in /app/app.py:233] - Finished processing 17 adminsettings.xml file(s).
+2025-08-04 17:23:47,927 - INFO - [in /app/app.py:402] - Re-zipping the package.
+2025-08-04 17:23:54,802 - INFO - [in /app/app.py:407] - Successfully created processed file: 2025_-_S-161-IR__Incident_Reporting-ITS_Logistics_20250711192425_processed_1.2.zip
+2025-08-04 17:23:54,808 - INFO - [in /app/app.py:422] - --- Successfully finished processing job for: 2025_-_S-161-IR__Incident_Reporting-ITS_Logistics_20250711192425.zip ---
+2025-08-04 17:36:04,188 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 17:36:04,188 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 17:36:04,188 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 17:36:04,190 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 17:36:04,239 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-04 17:36:47,971 - INFO - [in /app/app.py:321] - --- Starting new processing job for: Abusive_Conduct_-Ramon_Test_Org_20250502191753.zip ---
+2025-08-04 17:36:47,972 - INFO - [in /app/app.py:322] - Parameters: SCORM Type='1.2', KnowBe4='False', Logo Provided='False', License Key Provided='False'
+2025-08-04 17:36:47,973 - INFO - [in /app/app.py:334] - Unzipping Abusive_Conduct_-Ramon_Test_Org_20250502191753.zip to processed/_temp_Abusive_Conduct_-Ramon_Test_Org_20250502191753.zip
+2025-08-04 17:36:48,098 - INFO - [in /app/app.py:338] - Unzipping complete.
+2025-08-04 17:36:48,099 - INFO - [in /app/app.py:342] - Validating for imsmanifest.xml
+2025-08-04 17:36:48,100 - INFO - [in /app/app.py:348] - Manifest found.
+2025-08-04 17:36:48,100 - INFO - [in /app/app.py:353] - Detected engine type: iengine6
+2025-08-04 17:36:48,101 - INFO - [in /app/app.py:121] - Starting file cleanup process.
+2025-08-04 17:36:48,103 - INFO - [in /app/app.py:133] - Removed file: .idea/.gitignore
+2025-08-04 17:36:48,104 - INFO - [in /app/app.py:133] - Removed file: .gitignore
+2025-08-04 17:36:48,105 - INFO - [in /app/app.py:133] - Removed file: README.md
+2025-08-04 17:36:48,106 - INFO - [in /app/app.py:145] - Removed directory: .vscode
+2025-08-04 17:36:48,107 - INFO - [in /app/app.py:145] - Removed directory: .idea
+2025-08-04 17:36:48,108 - INFO - [in /app/app.py:155] - File cleanup process completed.
+2025-08-04 17:36:48,108 - INFO - [in /app/app.py:372] - Validating manifest files.
+2025-08-04 17:36:48,109 - INFO - [in /app/app.py:380] - Manifests validated.
+2025-08-04 17:36:48,110 - INFO - [in /app/app.py:388] - Updating manifest for SCORM 1.2.
+2025-08-04 17:36:48,111 - INFO - [in /app/app.py:391] - Manifest update complete.
+2025-08-04 17:36:48,111 - INFO - [in /app/app.py:160] - Starting to edit adminsettings.xml files for SCORM 1.2.
+2025-08-04 17:36:48,112 - INFO - [in /app/app.py:168] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-08-04 17:36:48,115 - INFO - [in /app/app.py:180] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-08-04 17:36:48,115 - INFO - [in /app/app.py:180] - Set <UseScormVersion12> to 'true' in xmls/en/adminsettings.xml
+2025-08-04 17:36:48,116 - INFO - [in /app/app.py:180] - Set <UseScormVersion2004> to 'false' in xmls/en/adminsettings.xml
+2025-08-04 17:36:48,116 - INFO - [in /app/app.py:180] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-08-04 17:36:48,117 - INFO - [in /app/app.py:180] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-08-04 17:36:48,117 - INFO - [in /app/app.py:180] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-08-04 17:36:48,119 - INFO - [in /app/app.py:221] - Finished processing 1 adminsettings.xml file(s).
+2025-08-04 17:36:48,120 - INFO - [in /app/app.py:400] - Re-zipping the package.
+2025-08-04 17:36:48,631 - INFO - [in /app/app.py:405] - Successfully created processed file: Abusive_Conduct_-Ramon_Test_Org_20250502191753_processed_1.2.zip
+2025-08-04 17:36:48,631 - INFO - [in /app/app.py:420] - --- Successfully finished processing job for: Abusive_Conduct_-Ramon_Test_Org_20250502191753.zip ---
+2025-08-04 17:36:49,742 - INFO - [in /app/app.py:321] - --- Starting new processing job for: GDPR__Introduction_and_Overview-Waggener_Edstrom_20250620134231.zip ---
+2025-08-04 17:36:49,743 - INFO - [in /app/app.py:322] - Parameters: SCORM Type='1.2', KnowBe4='False', Logo Provided='False', License Key Provided='False'
+2025-08-04 17:36:49,744 - INFO - [in /app/app.py:334] - Unzipping GDPR__Introduction_and_Overview-Waggener_Edstrom_20250620134231.zip to processed/_temp_GDPR__Introduction_and_Overview-Waggener_Edstrom_20250620134231.zip
+2025-08-04 17:36:50,230 - INFO - [in /app/app.py:338] - Unzipping complete.
+2025-08-04 17:36:50,231 - INFO - [in /app/app.py:342] - Validating for imsmanifest.xml
+2025-08-04 17:36:50,232 - INFO - [in /app/app.py:348] - Manifest found.
+2025-08-04 17:36:50,233 - INFO - [in /app/app.py:353] - Detected engine type: iengine5
+2025-08-04 17:36:50,233 - INFO - [in /app/app.py:121] - Starting file cleanup process.
+2025-08-04 17:36:50,249 - INFO - [in /app/app.py:145] - Removed directory: __MACOSX
+2025-08-04 17:36:50,250 - INFO - [in /app/app.py:155] - File cleanup process completed.
+2025-08-04 17:36:50,251 - INFO - [in /app/app.py:372] - Validating manifest files.
+2025-08-04 17:36:50,252 - ERROR - [in /app/app.py:377] - Manifest validation failed.
+2025-08-04 17:36:50,252 - ERROR - [in /app/app.py:422] - --- Processing job for GDPR__Introduction_and_Overview-Waggener_Edstrom_20250620134231.zip failed: Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCORM2004.xml'. ---
+Traceback (most recent call last):
+  File "/app/app.py", line 412, in process_package_stream
+    log_line = next(flow)
+               ^^^^^^^^^^
+  File "/app/app.py", line 378, in main_processing_flow
+    raise ValueError("Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCORM2004.xml'.")
+ValueError: Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCORM2004.xml'.

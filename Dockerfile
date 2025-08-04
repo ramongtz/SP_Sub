@@ -2,7 +2,6 @@
 # --- Instructions to build a secure, multi-stage container ---
 
 # --- Stage 1: The Builder ---
-# --- MODIFIED: Use a more recent, secure base image ---
 FROM python:3.12-slim as builder
 
 # Set the working directory
@@ -16,14 +15,12 @@ RUN pip install --no-cache-dir --upgrade pip setuptools
 
 # Copy only the requirements file to leverage Docker cache
 COPY requirements.txt .
-
 # Install the Python dependencies
 # Using --upgrade-strategy eager ensures that dependencies are upgraded
 RUN pip install --no-cache-dir --upgrade-strategy eager -r requirements.txt
 
 
 # --- Stage 2: The Final Image ---
-# --- MODIFIED: Use the same more recent, secure base image ---
 FROM python:3.12-slim
 
 # Set the working directory
@@ -35,7 +32,6 @@ RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 # Create a non-root user
 RUN addgroup --system app && adduser --system --group app
 
-# --- MODIFIED: Update Python version in path ---
 # --- Copy installed packages AND executables from the builder stage ---
 COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
@@ -54,5 +50,5 @@ USER app
 # Make port 8080 available
 EXPOSE 8080
 
-# Run the app with Gunicorn
-CMD ["gunicorn", "--worker-class", "gevent", "--bind", "0.0.0.0:8080", "app:app"]
+# Run Gunicorn with a configurable number of workers
+CMD exec gunicorn --worker-class gevent --workers ${GUNICORN_WORKERS:-3} --bind 0.0.0.0:8080 "app:app"

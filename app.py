@@ -21,13 +21,21 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from jose import jwt
 
+# --- NEW: Import Flask-Limiter for rate limiting ---
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 # --- NEW: Import and set up logging ---
 from logging_config import setup_logging
 
-# --- Auth0 Configuration ---
-AUTH0_DOMAIN = 'dev-b0houl2m3pgvvqbt.us.auth0.com'
-API_AUDIENCE = 'https://scorm-processor-api'
+# --- REVISED: Auth0 Configuration from Environment Variables ---
+AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
+API_AUDIENCE = os.environ.get('API_AUDIENCE')
 ALGORITHMS = ["RS256"]
+
+# Validate that the environment variables are set
+if not all([AUTH0_DOMAIN, API_AUDIENCE]):
+    raise RuntimeError("Missing required Auth0 environment variables (AUTH0_DOMAIN, API_AUDIENCE).")
 
 # --- NEW: Branding Configuration ---
 LOGO_WIDTH = 300
@@ -37,6 +45,14 @@ LOGO_FILENAME_IENGINE5 = "customer_logo.png"
 # --- Flask App Initialization ---
 app = Flask(__name__)
 CORS(app)
+
+# --- NEW: Initialize the rate limiter ---
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",
+)
 
 # --- NEW: Setup logging from the external file ---
 setup_logging(app)
@@ -321,6 +337,16 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_da
             yield "     ✅ SUCCESS: Package unzipped."
             app.logger.info("Unzipping complete.")
             
+            # --- NEW: Validate that the package is a valid SCORM file ---
+            yield "[STEP] Validating SCORM package..."
+            app.logger.info("Validating for imsmanifest.xml")
+            manifest_path_check = os.path.join(temp_extract_dir, 'imsmanifest.xml')
+            if not os.path.exists(manifest_path_check):
+                app.logger.error("Manifest validation failed: imsmanifest.xml not found.")
+                raise ValueError("The uploaded file is not a valid SCORM package (missing 'imsmanifest.xml').")
+            yield "     ✅ SUCCESS: 'imsmanifest.xml' found."
+            app.logger.info("Manifest found.")
+            
             is_iengine5 = os.path.exists(os.path.join(temp_extract_dir, 'scorm'))
             engine_type = 'iengine5' if is_iengine5 else 'iengine6'
             yield f"  -> Engine Type detected: {engine_type}"
@@ -402,6 +428,7 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_da
 
 # --- API Endpoints ---
 @app.route('/api/process', methods=['POST'])
+@limiter.limit("20 per minute") # Apply rate limit
 @requires_auth
 def process_scorm_file(jwt_payload):
     if 'file' not in request.files:

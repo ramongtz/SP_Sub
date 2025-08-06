@@ -1,0 +1,34 @@
+# render.yaml
+# Instructions for Render to build and deploy both frontend and backend services
+
+services:
+  # The Python/Gunicorn backend. This is a "Private Service".
+  - type: pserv
+    name: backend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    # Pull environment variables from the group defined below
+    envVarGroups:
+      - name: scorm-app-secrets
+
+  # The Nginx frontend. This is the main, public-facing "Web Service".
+  - type: web
+    name: frontend
+    env: docker
+    dockerfilePath: ./frontend.Dockerfile
+    # Set a health check path that Nginx will respond to
+    healthCheckPath: /
+
+# Define a group for secrets and environment variables
+# This makes them easy to manage and share between services if needed
+envVarGroups:
+  - name: scorm-app-secrets
+    envVars:
+      - key: AUTH0_DOMAIN
+        value: dev-b0houl2m3pgvvqbt.us.auth0.com # <-- REPLACE with your actual domain
+      - key: API_AUDIENCE
+        value: https://scorm-processor-api   # <-- REPLACE with your actual audience
+      - key: GUNICORN_WORKERS
+        value: 5
+      - key: PYTHON_VERSION # Good practice to specify for Render
+        value: 3.12

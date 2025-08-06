@@ -1,30 +1,29 @@
-# render.yaml (Using 'routes' as requested for testing)
+# render.yaml (Corrected Version)
 
 services:
-  # The Python/Gunicorn backend.
+  # The Python/Gunicorn backend. This is a "Private Service".
   - type: pserv
     name: backend
     env: docker
     dockerfilePath: ./Dockerfile
+    # --- CORRECTED: Use 'envVars' with 'fromGroup' to link to the group ---
     envVars:
       - fromGroup: scorm-app-secrets
 
-  # The Nginx frontend.
+  # The Nginx frontend. This is the main, public-facing "Web Service".
   - type: web
     name: frontend
     env: docker
     dockerfilePath: ./frontend.Dockerfile
     healthCheckPath: /
-    # --- MODIFIED: Using 'routes' instead of 'rewrites' ---
-    routes:
-      - type: rewrite
-        source: /api/:path*
+    # Routing Rules to proxy API and download calls to the backend.
+    rewrites:
+      - source: /api/:path*
         destination: http://backend:8080/api/:path
-      - type: rewrite
-        source: /download/:path*
+      - source: /download/:path*
         destination: http://backend:8080/download/:path
 
-# Define a group for secrets and environment variables
+# Define the environment group for your secrets
 envVarGroups:
   - name: scorm-app-secrets
     envVars:

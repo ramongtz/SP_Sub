@@ -1,4 +1,4 @@
-# render.yaml (Final Version)
+# render.yaml (Corrected Version)
 
 services:
   # The Python/Gunicorn backend. This is a "Private Service".
@@ -6,8 +6,9 @@ services:
     name: backend
     env: docker
     dockerfilePath: ./Dockerfile
-    envVarGroups:
-      - name: scorm-app-secrets
+    # --- CORRECTED: Use 'envVars' with 'fromGroup' to link to the group ---
+    envVars:
+      - fromGroup: scorm-app-secrets
 
   # The Nginx frontend. This is the main, public-facing "Web Service".
   - type: web
@@ -15,23 +16,21 @@ services:
     env: docker
     dockerfilePath: ./frontend.Dockerfile
     healthCheckPath: /
-    # --- Routing Rules ---
-    # The `try_files` directive in your nginx.conf handles SPA routing.
-    # We only need to tell Render how to proxy API and download calls to the backend.
+    # Routing Rules to proxy API and download calls to the backend.
     rewrites:
       - source: /api/:path*
         destination: http://backend:8080/api/:path
       - source: /download/:path*
         destination: http://backend:8080/download/:path
 
-# Define a group for secrets and environment variables
+# Define the environment group for your secrets
 envVarGroups:
   - name: scorm-app-secrets
     envVars:
       - key: AUTH0_DOMAIN
-        value: dev-b0houl2m3pgvvqbt.us.auth0.com # <-- REPLACE with your actual domain
+        value: dev-b0houl2m3pgvvqbt.us.auth0.com # <-- REPLACE
       - key: API_AUDIENCE
-        value: https://scorm-processor-api   # <-- REPLACE with your actual audience
+        value: https://scorm-processor-api   # <-- REPLACE
       - key: GUNICORN_WORKERS
         value: 5
       - key: PYTHON_VERSION

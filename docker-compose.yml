@@ -12,10 +12,9 @@ services:
     volumes:
       - ./logs:/app/logs
     # --- NEW: Provide environment variables to the container ---
-    environment:
-      - GUNICORN_WORKERS=5 # Sets the number of workers for performance
-      - AUTH0_DOMAIN=dev-b0houl2m3pgvvqbt.us.auth0.com # <-- REPLACE with your Auth0 Domain
-      - API_AUDIENCE=https://scorm-processor-api   # <-- REPLACE with your API Audience
+    env_file:
+      - .env
+
 
   # Our Nginx Frontend Service
   frontend:

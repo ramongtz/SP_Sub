@@ -422,13 +422,53 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_da
         app.logger.error(f"--- Processing job for {base_name} failed: {e} ---", exc_info=True)
         yield format_sse(f'{{"message": "FATAL ERROR: {str(e)}"}}', 'error')
     finally:
+        # --- MODIFIED: Clean up temp directory AND original uploaded file ---
         if os.path.exists(temp_extract_dir):
             shutil.rmtree(temp_extract_dir)
+        if os.path.exists(zip_path):
+            try:
+                os.remove(zip_path)
+                app.logger.info(f"Successfully purged original upload: {os.path.basename(zip_path)}")
+            except OSError as e:
+                app.logger.error(f"Error purging original upload {os.path.basename(zip_path)}: {e}")
 
 
 # --- API Endpoints ---
+def _purge_directory(directory):
+    """Helper function to delete all files in a directory."""
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            app.logger.error(f'Failed to delete {file_path}. Reason: {e}')
+
+@app.route('/api/purge', methods=['POST'])
+@requires_auth
+def purge_workspace(jwt_payload):
+    """Endpoint to clean the workspace before a new batch upload."""
+    app.logger.info("Received request to purge workspace.")
+    try:
+        upload_folder = app.config['UPLOAD_FOLDER']
+        processed_folder = app.config['PROCESSED_FOLDER']
+        
+        app.logger.info(f"Purging directory: {upload_folder}")
+        _purge_directory(upload_folder)
+        
+        app.logger.info(f"Purging directory: {processed_folder}")
+        _purge_directory(processed_folder)
+        
+        app.logger.info("Workspace purged successfully.")
+        return jsonify({"status": "success", "message": "Workspace purged successfully."}), 200
+    except Exception as e:
+        app.logger.error(f"An error occurred during workspace purge: {e}", exc_info=True)
+        return jsonify({"status": "error", "message": "An error occurred during cleanup."}), 500
+
 @app.route('/api/process', methods=['POST'])
-@limiter.limit("20 per minute") # Apply rate limit
+@limiter.limit("20 per minute")
 @requires_auth
 def process_scorm_file(jwt_payload):
     if 'file' not in request.files:

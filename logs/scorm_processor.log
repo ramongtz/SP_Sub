@@ -218,3 +218,48 @@ Traceback (most recent call last):
   File "/app/app.py", line 378, in main_processing_flow
     raise ValueError("Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCORM2004.xml'.")
 ValueError: Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCORM2004.xml'.
+2025-08-06 14:59:52,133 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-06 14:59:52,133 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-06 14:59:52,133 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-06 14:59:52,133 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-06 14:59:52,133 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-06 15:32:05,512 - INFO - [in /app/app.py:321] - --- Starting new processing job for: v.23.04.00.06_english_Apollo_Management_Holdings.zip ---
+2025-08-06 15:32:05,515 - INFO - [in /app/app.py:322] - Parameters: SCORM Type='2004', KnowBe4='False', Logo Provided='True', License Key Provided='False'
+2025-08-06 15:32:05,518 - INFO - [in /app/app.py:334] - Unzipping v.23.04.00.06_english_Apollo_Management_Holdings.zip to processed/_temp_v.23.04.00.06_english_Apollo_Management_Holdings.zip
+2025-08-06 15:32:06,176 - INFO - [in /app/app.py:338] - Unzipping complete.
+2025-08-06 15:32:06,178 - INFO - [in /app/app.py:342] - Validating for imsmanifest.xml
+2025-08-06 15:32:06,180 - INFO - [in /app/app.py:348] - Manifest found.
+2025-08-06 15:32:06,182 - INFO - [in /app/app.py:353] - Detected engine type: iengine6
+2025-08-06 15:32:06,184 - INFO - [in /app/app.py:121] - Starting file cleanup process.
+2025-08-06 15:32:06,188 - INFO - [in /app/app.py:133] - Removed file: .idea/.gitignore
+2025-08-06 15:32:06,189 - INFO - [in /app/app.py:133] - Removed file: .gitignore
+2025-08-06 15:32:06,190 - INFO - [in /app/app.py:133] - Removed file: README.md
+2025-08-06 15:32:06,191 - INFO - [in /app/app.py:145] - Removed directory: .vscode
+2025-08-06 15:32:06,192 - INFO - [in /app/app.py:145] - Removed directory: .idea
+2025-08-06 15:32:06,193 - INFO - [in /app/app.py:155] - File cleanup process completed.
+2025-08-06 15:32:06,194 - INFO - [in /app/app.py:226] - Starting branding process.
+2025-08-06 15:32:06,226 - INFO - [in /app/app.py:231] - Resizing logo to 300x88px.
+2025-08-06 15:32:06,236 - INFO - [in /app/app.py:248] - Saved logo to: xmls/apollologo.png
+2025-08-06 15:32:06,237 - INFO - [in /app/app.py:252] - Branding process completed successfully.
+2025-08-06 15:32:06,238 - INFO - [in /app/app.py:372] - Validating manifest files.
+2025-08-06 15:32:06,240 - INFO - [in /app/app.py:380] - Manifests validated.
+2025-08-06 15:32:06,241 - INFO - [in /app/app.py:384] - Updating manifest for SCORM 2004.
+2025-08-06 15:32:06,242 - INFO - [in /app/app.py:391] - Manifest update complete.
+2025-08-06 15:32:06,243 - INFO - [in /app/app.py:160] - Starting to edit adminsettings.xml files for SCORM 2004.
+2025-08-06 15:32:06,246 - INFO - [in /app/app.py:168] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-08-06 15:32:06,252 - INFO - [in /app/app.py:180] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-08-06 15:32:06,253 - INFO - [in /app/app.py:180] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-08-06 15:32:06,254 - INFO - [in /app/app.py:180] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-08-06 15:32:06,255 - INFO - [in /app/app.py:180] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-08-06 15:32:06,255 - INFO - [in /app/app.py:180] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-08-06 15:32:06,256 - INFO - [in /app/app.py:180] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-08-06 15:32:06,256 - INFO - [in /app/app.py:190] - Set <TopLogo> to '../apollologo.png' in xmls/en/adminsettings.xml
+2025-08-06 15:32:06,257 - INFO - [in /app/app.py:190] - Set <CustomerLogo> to '../apollologo.png' in xmls/en/adminsettings.xml
+2025-08-06 15:32:06,261 - INFO - [in /app/app.py:221] - Finished processing 1 adminsettings.xml file(s).
+2025-08-06 15:32:06,262 - INFO - [in /app/app.py:280] - Starting JS file edits for SCORM 2004.
+2025-08-06 15:32:06,263 - INFO - [in /app/app.py:299] - Standard SCORM 2004 processing.
+2025-08-06 15:32:06,264 - WARNING - [in /app/app.py:313] - scorm_2004.js not found, skipping edit.
+2025-08-06 15:32:06,265 - INFO - [in /app/app.py:315] - JS file edits for SCORM 2004 completed.
+2025-08-06 15:32:06,266 - INFO - [in /app/app.py:400] - Re-zipping the package.
+2025-08-06 15:32:10,007 - INFO - [in /app/app.py:405] - Successfully created processed file: v.23.04.00.06_english_Apollo_Management_Holdings_processed_2004.zip
+2025-08-06 15:32:10,040 - INFO - [in /app/app.py:420] - --- Successfully finished processing job for: v.23.04.00.06_english_Apollo_Management_Holdings.zip ---

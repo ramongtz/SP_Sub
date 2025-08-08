@@ -347,3 +347,13 @@ ValueError: Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCO
 2025-08-06 17:24:02,828 - INFO - [in /app/app.py:405] - Successfully created processed file: Security_Awareness__A_Day_In_The_Life__20250617133305_processed_1.2.zip
 2025-08-06 17:24:02,829 - INFO - [in /app/app.py:420] - --- Successfully finished processing job for: Security_Awareness__A_Day_In_The_Life__20250617133305.zip ---
 2025-08-06 17:24:02,876 - INFO - [in /app/app.py:431] - Successfully purged original upload: Security_Awareness__A_Day_In_The_Life__20250617133305.zip
+2025-08-08 18:01:01,399 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-08 18:01:01,399 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-08 18:01:01,399 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-08 18:01:01,399 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-08 18:01:01,399 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-08 18:05:13,103 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-08 18:05:13,242 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-08 18:05:13,294 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-08 18:05:13,344 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-08-08 18:05:13,380 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.

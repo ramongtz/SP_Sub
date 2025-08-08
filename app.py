@@ -116,6 +116,56 @@ def requires_auth(f):
 
 
 # --- Generator-based helper functions ---
+def _replace_text_in_file(file_path, search_text, replace_text):
+    """Helper to perform a find-and-replace on a text file."""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        new_content = content.replace(search_text, replace_text)
+        
+        if content != new_content:
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            return True
+    except Exception as e:
+        app.logger.error(f"Could not replace text in {file_path}: {e}")
+    return False
+
+def handle_iengine5_licensing(directory, is_licensed):
+    """Generator to handle licensing flag for iengine5 courses."""
+    yield "[STEP] Applying iengine5 licensing settings"
+    app.logger.info(f"Setting iengine5 licensing DialogIsVisible to {is_licensed}.")
+    
+    js_folder = os.path.join(directory, 'js')
+    files_to_edit = ['course-engine-txt.js', 'course-engine-video.js']
+    target_var = 'var DialogIsVisible'
+    found_any = False
+
+    for filename in files_to_edit:
+        file_path = os.path.join(js_folder, filename)
+        if os.path.exists(file_path):
+            found_any = True
+            search_text_true = f'{target_var} = true;'
+            search_text_false = f'{target_var} = false;'
+            
+            if is_licensed:
+                if _replace_text_in_file(file_path, search_text_false, search_text_true):
+                    yield f"  -> Set DialogIsVisible to true in {filename}"
+                else:
+                    yield f"  -> DialogIsVisible was already true or not found in {filename}"
+            else: # not licensed
+                if _replace_text_in_file(file_path, search_text_true, search_text_false):
+                    yield f"  -> Set DialogIsVisible to false in {filename}"
+                else:
+                    yield f"  -> DialogIsVisible was already false or not found in {filename}"
+    
+    if not found_any:
+        yield "     ⚠️ WARNING: No iengine5 JS files found for licensing."
+    else:
+        yield "     ✅ SUCCESS: iengine5 licensing settings applied."
+
+
 def clean_unnecessary_files(directory):
     yield "[STEP] Cleaning unnecessary files and folders"
     app.logger.info("Starting file cleanup process.")
@@ -155,9 +205,9 @@ def clean_unnecessary_files(directory):
     app.logger.info("File cleanup process completed.")
 
 
-def edit_admin_settings(directory, scorm_version, engine_type, logo_details=None, license_key=None):
-    yield f"[STEP] Finding and editing 'adminsettings.xml' files for SCORM {scorm_version}"
-    app.logger.info(f"Starting to edit adminsettings.xml files for SCORM {scorm_version}.")
+def edit_admin_settings(directory, scorm_version, engine_type, is_licensed, is_scorm_enabled, logo_details=None, license_key=None):
+    yield f"[STEP] Finding and editing 'adminsettings.xml' files"
+    app.logger.info(f"Editing adminsettings.xml: SCORM Enabled={is_scorm_enabled}, Licensed={is_licensed}.")
     found_files = []
     for root, _, files in os.walk(directory):
         if 'adminsettings.xml' in files:
@@ -170,9 +220,16 @@ def edit_admin_settings(directory, scorm_version, engine_type, logo_details=None
                 ET.register_namespace('', "http://www.w3.org/2001/XMLSchema")
                 tree = ET.parse(xml_path)
                 xml_root = tree.getroot()
-                changes = ({"UseScorm": "true", "UseScormVersion12": "true", "UseScormVersion2004": "false", "URLOnExit": "", "ReviewMode": "false", "HostedOniLMS": "false"}
-                           if scorm_version == '1.2' else
-                           {"UseScorm": "true", "UseScormVersion12": "false", "UseScormVersion2004": "true", "URLOnExit": "", "ReviewMode": "false", "HostedOniLMS": "false"})
+                
+                # --- MODIFIED: Handle settings based on new toggles ---
+                changes = {
+                    "UseScorm": "true" if is_scorm_enabled else "false",
+                    "UseScormVersion12": "true" if scorm_version == '1.2' else "false",
+                    "UseScormVersion2004": "true" if scorm_version == '2004' else "false",
+                    "URLOnExit": "",
+                    "ReviewMode": "false",
+                    "HostedOniLMS": "false"
+                }
                 for tag_name, value in changes.items():
                     element = xml_root.find(f".//{{*}}{tag_name}") or xml_root.find(tag_name)
                     if element is not None:
@@ -189,24 +246,27 @@ def edit_admin_settings(directory, scorm_version, engine_type, logo_details=None
                             yield f"  -> Set <{tag}> to '{path_to_set}'"
                             app.logger.info(f"Set <{tag}> to '{path_to_set}' in {relative_path}")
 
-                if engine_type == 'iengine6' and license_key:
-                    key_element = xml_root.find("KeyCode")
-                    if key_element is None:
-                        key_element = ET.SubElement(xml_root, "KeyCode")
-                        yield f"  -> Created missing <KeyCode> tag."
-                        app.logger.info(f"Created missing <KeyCode> tag in {relative_path}")
-                    key_element.text = license_key
-                    yield f"  -> Set <KeyCode> with license key."
-                    app.logger.info(f"Set <KeyCode> in {relative_path}")
-                    
+                if engine_type == 'iengine6':
+                    # Handle iengine6 licensing toggle
                     check_element = xml_root.find("EnableCheck")
                     if check_element is None:
                         check_element = ET.SubElement(xml_root, "EnableCheck")
                         yield f"  -> Created missing <EnableCheck> tag."
                         app.logger.info(f"Created missing <EnableCheck> tag in {relative_path}")
-                    check_element.text = "true"
-                    yield f"  -> Set <EnableCheck> to 'true'."
-                    app.logger.info(f"Set <EnableCheck> to 'true' in {relative_path}")
+                    check_element.text = "true" if is_licensed else "false"
+                    yield f"  -> Set <EnableCheck> to '{check_element.text}'."
+                    app.logger.info(f"Set <EnableCheck> to '{check_element.text}' in {relative_path}")
+                    
+                    # Only apply license key if licensing is enabled
+                    if is_licensed and license_key:
+                        key_element = xml_root.find("KeyCode")
+                        if key_element is None:
+                            key_element = ET.SubElement(xml_root, "KeyCode")
+                            yield f"  -> Created missing <KeyCode> tag."
+                            app.logger.info(f"Created missing <KeyCode> tag in {relative_path}")
+                        key_element.text = license_key
+                        yield f"  -> Set <KeyCode> with license key."
+                        app.logger.info(f"Set <KeyCode> in {relative_path}")
 
                 tree.write(xml_path, encoding='utf-8', xml_declaration=True)
             except Exception as e:
@@ -316,10 +376,10 @@ def edit_js_files_2004(js_folder_path, is_knowbe4):
 
 
 # --- Main processing stream ---
-def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_data=None, logo_filename=None, license_key=None):
+def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, is_licensed, is_scorm_enabled, logo_data=None, logo_filename=None, license_key=None):
     base_name = os.path.basename(zip_path)
     app.logger.info(f"--- Starting new processing job for: {base_name} ---")
-    app.logger.info(f"Parameters: SCORM Type='{scorm_type}', KnowBe4='{is_knowbe4}', Logo Provided='{logo_data is not None}', License Key Provided='{license_key is not None}'")
+    app.logger.info(f"Parameters: SCORM Type='{scorm_type}', KnowBe4='{is_knowbe4}', Licensed='{is_licensed}', SCORM Enabled='{is_scorm_enabled}'")
     
     temp_extract_dir = os.path.join(output_dir, f"_temp_{base_name}")
     if os.path.exists(temp_extract_dir): shutil.rmtree(temp_extract_dir)
@@ -337,7 +397,6 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_da
             yield "     ✅ SUCCESS: Package unzipped."
             app.logger.info("Unzipping complete.")
             
-            # --- NEW: Validate that the package is a valid SCORM file ---
             yield "[STEP] Validating SCORM package..."
             app.logger.info("Validating for imsmanifest.xml")
             manifest_path_check = os.path.join(temp_extract_dir, 'imsmanifest.xml')
@@ -365,34 +424,40 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_da
                         logo_details = e.value
                         break
             
-            if license_key:
-                if engine_type == 'iengine5':
-                    yield from handle_license_key(temp_extract_dir, license_key)
+            if is_licensed and license_key and engine_type == 'iengine5':
+                yield from handle_license_key(temp_extract_dir, license_key)
             
-            app.logger.info("Validating manifest files.")
-            yield "[STEP] Validating manifest files"
-            manifest_path = os.path.join(temp_extract_dir, 'imsmanifest.xml')
-            manifest_2004_path = os.path.join(temp_extract_dir, 'imsmanifest_SCORM2004.xml')
-            if not (os.path.exists(manifest_path) and os.path.exists(manifest_2004_path)):
-                app.logger.error("Manifest validation failed.")
-                raise ValueError("Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCORM2004.xml'.")
-            yield "     ✅ SUCCESS: Both manifest files found."
-            app.logger.info("Manifests validated.")
+            if engine_type == 'iengine5':
+                yield from handle_iengine5_licensing(temp_extract_dir, is_licensed)
 
-            if scorm_type == '2004':
-                yield "[STEP] Updating manifest for SCORM 2004"
-                app.logger.info("Updating manifest for SCORM 2004.")
-                os.remove(manifest_path); os.rename(manifest_2004_path, manifest_path)
-            elif scorm_type == '1.2':
-                yield "[STEP] Updating manifest for SCORM 1.2"
-                app.logger.info("Updating manifest for SCORM 1.2.")
-                os.remove(manifest_2004_path)
-            yield "     ✅ SUCCESS: Manifest updated."
-            app.logger.info("Manifest update complete.")
+            if is_scorm_enabled:
+                app.logger.info("SCORM is enabled, validating manifest files.")
+                yield "[STEP] Validating manifest files"
+                manifest_path = os.path.join(temp_extract_dir, 'imsmanifest.xml')
+                manifest_2004_path = os.path.join(temp_extract_dir, 'imsmanifest_SCORM2004.xml')
+                if not (os.path.exists(manifest_path) and os.path.exists(manifest_2004_path)):
+                    app.logger.error("Manifest validation failed.")
+                    raise ValueError("Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCORM2004.xml'.")
+                yield "     ✅ SUCCESS: Both manifest files found."
+                app.logger.info("Manifests validated.")
+
+                if scorm_type == '2004':
+                    yield "[STEP] Updating manifest for SCORM 2004"
+                    app.logger.info("Updating manifest for SCORM 2004.")
+                    os.remove(manifest_path); os.rename(manifest_2004_path, manifest_path)
+                elif scorm_type == '1.2':
+                    yield "[STEP] Updating manifest for SCORM 1.2"
+                    app.logger.info("Updating manifest for SCORM 1.2.")
+                    os.remove(manifest_2004_path)
+                yield "     ✅ SUCCESS: Manifest updated."
+                app.logger.info("Manifest update complete.")
+            else:
+                yield "[INFO] SCORM is disabled, skipping manifest validation and updates."
+                app.logger.info("SCORM is disabled, skipping manifest validation and updates.")
             
-            yield from edit_admin_settings(temp_extract_dir, scorm_type, engine_type, logo_details, license_key)
+            yield from edit_admin_settings(temp_extract_dir, scorm_type, engine_type, is_licensed, is_scorm_enabled, logo_details, license_key)
 
-            if scorm_type == '2004':
+            if is_scorm_enabled and scorm_type == '2004':
                 js_folder = os.path.join(temp_extract_dir, 'js')
                 yield from edit_js_files_2004(js_folder, is_knowbe4)
 
@@ -422,7 +487,6 @@ def process_package_stream(zip_path, output_dir, scorm_type, is_knowbe4, logo_da
         app.logger.error(f"--- Processing job for {base_name} failed: {e} ---", exc_info=True)
         yield format_sse(f'{{"message": "FATAL ERROR: {str(e)}"}}', 'error')
     finally:
-        # --- MODIFIED: Clean up temp directory AND original uploaded file ---
         if os.path.exists(temp_extract_dir):
             shutil.rmtree(temp_extract_dir)
         if os.path.exists(zip_path):
@@ -478,6 +542,9 @@ def process_scorm_file(jwt_payload):
     scorm_type = request.form.get('scorm_type', '2004')
     is_knowbe4 = request.form.get('is_knowbe4') == 'true'
     license_key = request.form.get('license_key', None)
+    # --- MODIFIED: Get new toggle values from the form ---
+    is_licensed = request.form.get('is_licensed') == 'true'
+    is_scorm_enabled = request.form.get('is_scorm_enabled') == 'true'
 
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
@@ -493,7 +560,17 @@ def process_scorm_file(jwt_payload):
         logo_filename = secure_filename(logo_file.filename)
         logo_data = io.BytesIO(logo_file.read())
 
-    return Response(process_package_stream(upload_path, app.config['PROCESSED_FOLDER'], scorm_type, is_knowbe4, logo_data, logo_filename, license_key), mimetype='text/event-stream')
+    return Response(process_package_stream(
+        upload_path, 
+        app.config['PROCESSED_FOLDER'], 
+        scorm_type, 
+        is_knowbe4, 
+        is_licensed, 
+        is_scorm_enabled, 
+        logo_data, 
+        logo_filename, 
+        license_key
+    ), mimetype='text/event-stream')
 
 @app.route('/download/<path:filename>')
 @requires_auth

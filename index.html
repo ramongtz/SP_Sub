@@ -53,10 +53,31 @@
                     <p class="mt-1 text-xs text-slate-500">PNG, JPG, or GIF. Required size: 300x88px.</p>
                 </div>
 
-                <div>
-                    <label for="license-key-input" class="block text-sm font-semibold text-slate-700">License Key (Optional)</label>
-                    <div class="mt-2">
-                        <textarea id="license-key-input" name="license_key" rows="4" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                <div class="space-y-3">
+                    <div class="relative flex items-start">
+                        <div class="flex h-5 items-center">
+                            <input id="is_licensed" name="is_licensed" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" checked>
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="is_licensed" class="font-medium text-slate-700">Enable Licensing</label>
+                            <p class="text-slate-500">Controls the visibility of the license key window.</p>
+                        </div>
+                    </div>
+                    <div id="license-key-container">
+                        <label for="license-key-input" id="license-key-label" class="block text-sm font-semibold text-slate-700">License Key</label>
+                        <div class="mt-2">
+                            <textarea id="license-key-input" name="license_key" rows="4" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative flex items-start">
+                    <div class="flex h-5 items-center">
+                        <input id="is_scorm_enabled" name="is_scorm_enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" checked>
+                    </div>
+                    <div class="ml-3 text-sm">
+                        <label for="is_scorm_enabled" class="font-medium text-slate-700">Enable SCORM</label>
+                        <p class="text-slate-500">Sets the `UseScorm` flag in the course settings.</p>
                     </div>
                 </div>
 
@@ -142,6 +163,9 @@
         const downloadAllButton = document.getElementById('download-all-button');
         const knowbe4Container = document.getElementById('knowbe4-option-container');
         const scormTypeRadios = document.querySelectorAll('input[name="scorm_type"]');
+        // --- NEW: Get new toggle elements ---
+        const isLicensedToggle = document.getElementById('is_licensed');
+        const licenseKeyContainer = document.getElementById('license-key-container');
 
         let auth0Client = null;
         let processedFiles = [];
@@ -173,6 +197,8 @@
         downloadAllButton.addEventListener('click', handleBatchDownload);
         form.addEventListener('submit', handleFormSubmit);
         scormTypeRadios.forEach(radio => radio.addEventListener('change', toggleKnowBe4Option));
+        // --- NEW: Event listener for license toggle ---
+        isLicensedToggle.addEventListener('change', toggleLicenseKeyInput);
 
         // --- UI Functions ---
         const updateUI = async () => {
@@ -181,6 +207,12 @@
             logoutBtn.classList.toggle('hidden', !isAuthenticated);
             appBody.classList.toggle('hidden', !isAuthenticated);
         };
+
+        // --- NEW: Function to show/hide license key input ---
+        function toggleLicenseKeyInput() {
+            const isEnabled = isLicensedToggle.checked;
+            licenseKeyContainer.style.display = isEnabled ? 'block' : 'none';
+        }
 
         function toggleKnowBe4Option() {
             const isScorm2004 = document.querySelector('input[name="scorm_type"]:checked').value === '2004';
@@ -296,7 +328,6 @@
             processedFiles = [];
             downloadAllButton.disabled = true;
 
-            // --- MODIFIED: Purge workspace before starting a new batch ---
             try {
                 logOutput.textContent = '🧹 Cleaning workspace before starting...\n';
                 const accessToken = await auth0Client.getTokenSilently();
@@ -314,7 +345,6 @@
                 setLoadingState(false);
                 return;
             }
-            // --- END MODIFICATION ---
 
             logOutput.textContent += `🚀 Starting batch process for ${files.length} file(s)...\n\n`;
 
@@ -337,6 +367,11 @@
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('scorm_type', document.querySelector('input[name="scorm_type"]:checked').value);
+                
+                // --- MODIFIED: Append new toggle values ---
+                formData.append('is_licensed', document.getElementById('is_licensed').checked);
+                formData.append('is_scorm_enabled', document.getElementById('is_scorm_enabled').checked);
+
                 if (document.getElementById('is_knowbe4').checked) {
                     formData.append('is_knowbe4', 'true');
                 }
@@ -444,6 +479,7 @@
             }
             updateUI();
             toggleKnowBe4Option();
+            toggleLicenseKeyInput(); // --- NEW: Set initial state of license input
         };
 
     </script>

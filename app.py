@@ -170,7 +170,7 @@ def clean_unnecessary_files(directory):
     yield "[STEP] Cleaning unnecessary files and folders"
     app.logger.info("Starting file cleanup process.")
     files_to_remove = ['aicc.*', 'readme.md', '.gitignore', 'README.md']
-    dirs_to_remove = ['.idea', '.vscode', '__MACOSX']
+    dirs_to_remove = ['.idea', '.vscode', '__MACOSX', 'nbproject']
     found_any = False
     for root, dirs, files in os.walk(directory, topdown=False):
         for pattern in files_to_remove:

@@ -367,3 +367,537 @@ ValueError: Package does not contain both 'imsmanifest.xml' and 'imsmanifest_SCO
 2025-09-17 06:17:29,937 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
 2025-09-17 06:17:29,937 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
 2025-09-17 06:17:29,937 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-09-17 06:23:41,208 - INFO - [in /app/app.py:517] - Received request to purge workspace.
+2025-09-17 06:23:41,208 - INFO - [in /app/app.py:522] - Purging directory: uploads
+2025-09-17 06:23:41,209 - INFO - [in /app/app.py:525] - Purging directory: processed
+2025-09-17 06:23:41,209 - INFO - [in /app/app.py:528] - Workspace purged successfully.
+2025-09-17 06:23:41,450 - INFO - [in /app/app.py:381] - --- Starting new processing job for: Baseline_Information_Security_Training_for_IT_Prof_20250917061119.zip ---
+2025-09-17 06:23:41,451 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:23:41,452 - INFO - [in /app/app.py:394] - Unzipping Baseline_Information_Security_Training_for_IT_Prof_20250917061119.zip to processed/_temp_Baseline_Information_Security_Training_for_IT_Prof_20250917061119.zip
+2025-09-17 06:23:41,536 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:23:41,537 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:23:41,538 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:23:41,539 - INFO - [in /app/app.py:412] - Detected engine type: iengine5
+2025-09-17 06:23:41,539 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:23:41,541 - INFO - [in /app/app.py:183] - Removed file: .gitignore
+2025-09-17 06:23:41,544 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:23:41,546 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:23:41,547 - INFO - [in /app/app.py:138] - Setting iengine5 licensing DialogIsVisible to False.
+2025-09-17 06:23:41,548 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:23:41,548 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:23:41,549 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:23:41,550 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:23:41,550 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:23:41,552 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:23:41,553 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:41,553 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:41,554 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:41,554 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:23:41,554 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:41,555 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:41,556 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:23:41,556 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:23:41,557 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:23:41,557 - INFO - [in /app/app.py:367] - Successfully replaced LMSCommit() in scorm_2004.js.
+2025-09-17 06:23:41,558 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:23:41,558 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:23:41,843 - INFO - [in /app/app.py:470] - Successfully created processed file: Baseline_Information_Security_Training_for_IT_Prof_20250917061119_processed_2004.zip
+2025-09-17 06:23:41,845 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: Baseline_Information_Security_Training_for_IT_Prof_20250917061119.zip ---
+2025-09-17 06:23:41,856 - INFO - [in /app/app.py:495] - Successfully purged original upload: Baseline_Information_Security_Training_for_IT_Prof_20250917061119.zip
+2025-09-17 06:23:42,121 - INFO - [in /app/app.py:381] - --- Starting new processing job for: California_Consumer_Privacy_Act_CCPA_Essentials-_20250917061158.zip ---
+2025-09-17 06:23:42,122 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:23:42,124 - INFO - [in /app/app.py:394] - Unzipping California_Consumer_Privacy_Act_CCPA_Essentials-_20250917061158.zip to processed/_temp_California_Consumer_Privacy_Act_CCPA_Essentials-_20250917061158.zip
+2025-09-17 06:23:42,206 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:23:42,207 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:23:42,207 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:23:42,208 - INFO - [in /app/app.py:412] - Detected engine type: iengine6
+2025-09-17 06:23:42,208 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:23:42,209 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:23:42,210 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:23:42,211 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:23:42,212 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:23:42,212 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:23:42,213 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:23:42,213 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:23:42,214 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:23:42,215 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:42,216 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:42,216 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:42,217 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:23:42,217 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:42,218 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:42,218 - INFO - [in /app/app.py:258] - Set <EnableCheck> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:42,219 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:23:42,220 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:23:42,220 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:23:42,221 - WARNING - [in /app/app.py:373] - scorm_2004.js not found, skipping edit.
+2025-09-17 06:23:42,221 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:23:42,222 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:23:42,647 - INFO - [in /app/app.py:470] - Successfully created processed file: California_Consumer_Privacy_Act_CCPA_Essentials-_20250917061158_processed_2004.zip
+2025-09-17 06:23:42,648 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: California_Consumer_Privacy_Act_CCPA_Essentials-_20250917061158.zip ---
+2025-09-17 06:23:42,653 - INFO - [in /app/app.py:495] - Successfully purged original upload: California_Consumer_Privacy_Act_CCPA_Essentials-_20250917061158.zip
+2025-09-17 06:23:43,094 - INFO - [in /app/app.py:381] - --- Starting new processing job for: GDPR__Introduction_and_Overview-Advarra_20250917061110.zip ---
+2025-09-17 06:23:43,095 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:23:43,096 - INFO - [in /app/app.py:394] - Unzipping GDPR__Introduction_and_Overview-Advarra_20250917061110.zip to processed/_temp_GDPR__Introduction_and_Overview-Advarra_20250917061110.zip
+2025-09-17 06:23:43,253 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:23:43,255 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:23:43,255 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:23:43,256 - INFO - [in /app/app.py:412] - Detected engine type: iengine5
+2025-09-17 06:23:43,256 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:23:43,258 - INFO - [in /app/app.py:183] - Removed file: aicc.cst
+2025-09-17 06:23:43,258 - INFO - [in /app/app.py:183] - Removed file: aicc.crs
+2025-09-17 06:23:43,259 - INFO - [in /app/app.py:183] - Removed file: aicc.des
+2025-09-17 06:23:43,259 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:23:43,260 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:23:43,260 - INFO - [in /app/app.py:138] - Setting iengine5 licensing DialogIsVisible to False.
+2025-09-17 06:23:43,261 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:23:43,262 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:23:43,262 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:23:43,263 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:23:43,263 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:23:43,265 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:23:43,266 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:43,266 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:43,266 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:43,267 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:23:43,267 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:43,267 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:43,268 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:23:43,269 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:23:43,269 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:23:43,270 - INFO - [in /app/app.py:367] - Successfully replaced LMSCommit() in scorm_2004.js.
+2025-09-17 06:23:43,271 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:23:43,271 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:23:43,918 - INFO - [in /app/app.py:470] - Successfully created processed file: GDPR__Introduction_and_Overview-Advarra_20250917061110_processed_2004.zip
+2025-09-17 06:23:43,919 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: GDPR__Introduction_and_Overview-Advarra_20250917061110.zip ---
+2025-09-17 06:23:43,936 - INFO - [in /app/app.py:495] - Successfully purged original upload: GDPR__Introduction_and_Overview-Advarra_20250917061110.zip
+2025-09-17 06:23:44,157 - INFO - [in /app/app.py:381] - --- Starting new processing job for: GDPR__Transfers_of_Data_Outside_the_EU-Advarra_20250917061051.zip ---
+2025-09-17 06:23:44,157 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:23:44,158 - INFO - [in /app/app.py:394] - Unzipping GDPR__Transfers_of_Data_Outside_the_EU-Advarra_20250917061051.zip to processed/_temp_GDPR__Transfers_of_Data_Outside_the_EU-Advarra_20250917061051.zip
+2025-09-17 06:23:44,237 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:23:44,238 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:23:44,238 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:23:44,238 - INFO - [in /app/app.py:412] - Detected engine type: iengine5
+2025-09-17 06:23:44,239 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:23:44,240 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:23:44,241 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:23:44,242 - INFO - [in /app/app.py:138] - Setting iengine5 licensing DialogIsVisible to False.
+2025-09-17 06:23:44,242 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:23:44,243 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:23:44,243 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:23:44,244 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:23:44,245 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:23:44,246 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:23:44,247 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:44,247 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:44,248 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:44,248 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:23:44,248 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:44,249 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:44,250 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:23:44,251 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:23:44,252 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:23:44,252 - INFO - [in /app/app.py:367] - Successfully replaced LMSCommit() in scorm_2004.js.
+2025-09-17 06:23:44,253 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:23:44,254 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:23:44,530 - INFO - [in /app/app.py:470] - Successfully created processed file: GDPR__Transfers_of_Data_Outside_the_EU-Advarra_20250917061051_processed_2004.zip
+2025-09-17 06:23:44,530 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: GDPR__Transfers_of_Data_Outside_the_EU-Advarra_20250917061051.zip ---
+2025-09-17 06:23:44,539 - INFO - [in /app/app.py:495] - Successfully purged original upload: GDPR__Transfers_of_Data_Outside_the_EU-Advarra_20250917061051.zip
+2025-09-17 06:23:45,004 - INFO - [in /app/app.py:381] - --- Starting new processing job for: GDPR_for_Data_Handlers-Advarra_20250917061038.zip ---
+2025-09-17 06:23:45,005 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:23:45,006 - INFO - [in /app/app.py:394] - Unzipping GDPR_for_Data_Handlers-Advarra_20250917061038.zip to processed/_temp_GDPR_for_Data_Handlers-Advarra_20250917061038.zip
+2025-09-17 06:23:45,170 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:23:45,171 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:23:45,171 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:23:45,172 - INFO - [in /app/app.py:412] - Detected engine type: iengine5
+2025-09-17 06:23:45,172 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:23:45,174 - INFO - [in /app/app.py:183] - Removed file: aicc.cst
+2025-09-17 06:23:45,175 - INFO - [in /app/app.py:183] - Removed file: aicc.des
+2025-09-17 06:23:45,176 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:23:45,177 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:23:45,177 - INFO - [in /app/app.py:138] - Setting iengine5 licensing DialogIsVisible to False.
+2025-09-17 06:23:45,178 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:23:45,179 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:23:45,179 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:23:45,180 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:23:45,180 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:23:45,182 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:23:45,183 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:45,183 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:45,183 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:45,184 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:23:45,184 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:45,184 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:45,185 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:23:45,186 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:23:45,187 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:23:45,187 - INFO - [in /app/app.py:367] - Successfully replaced LMSCommit() in scorm_2004.js.
+2025-09-17 06:23:45,188 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:23:45,188 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:23:45,868 - INFO - [in /app/app.py:470] - Successfully created processed file: GDPR_for_Data_Handlers-Advarra_20250917061038_processed_2004.zip
+2025-09-17 06:23:45,869 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: GDPR_for_Data_Handlers-Advarra_20250917061038.zip ---
+2025-09-17 06:23:45,897 - INFO - [in /app/app.py:495] - Successfully purged original upload: GDPR_for_Data_Handlers-Advarra_20250917061038.zip
+2025-09-17 06:23:47,423 - INFO - [in /app/app.py:381] - --- Starting new processing job for: HIPAA_HITECH_Privacy_for_Business_Associates-Advar_20250917061152.zip ---
+2025-09-17 06:23:47,424 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:23:47,426 - INFO - [in /app/app.py:394] - Unzipping HIPAA_HITECH_Privacy_for_Business_Associates-Advar_20250917061152.zip to processed/_temp_HIPAA_HITECH_Privacy_for_Business_Associates-Advar_20250917061152.zip
+2025-09-17 06:23:47,958 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:23:47,959 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:23:47,960 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:23:47,960 - INFO - [in /app/app.py:412] - Detected engine type: iengine5
+2025-09-17 06:23:47,961 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:23:47,965 - INFO - [in /app/app.py:203] - No unnecessary files found to clean.
+2025-09-17 06:23:47,966 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:23:47,968 - INFO - [in /app/app.py:138] - Setting iengine5 licensing DialogIsVisible to False.
+2025-09-17 06:23:47,969 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:23:47,969 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:23:47,970 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:23:47,971 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:23:47,972 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:23:47,974 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:23:47,976 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:47,977 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:47,977 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:47,978 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:23:47,978 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:47,979 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:47,983 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:23:47,984 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:23:47,989 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:23:47,991 - INFO - [in /app/app.py:367] - Successfully replaced LMSCommit() in scorm_2004.js.
+2025-09-17 06:23:47,992 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:23:47,993 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:23:51,418 - INFO - [in /app/app.py:470] - Successfully created processed file: HIPAA_HITECH_Privacy_for_Business_Associates-Advar_20250917061152_processed_2004.zip
+2025-09-17 06:23:51,419 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: HIPAA_HITECH_Privacy_for_Business_Associates-Advar_20250917061152.zip ---
+2025-09-17 06:23:51,461 - INFO - [in /app/app.py:495] - Successfully purged original upload: HIPAA_HITECH_Privacy_for_Business_Associates-Advar_20250917061152.zip
+2025-09-17 06:23:51,867 - INFO - [in /app/app.py:381] - --- Starting new processing job for: HIPAA_HITECH_Privacy_for_Covered_Entities-Advarra_20250917061139.zip ---
+2025-09-17 06:23:51,868 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:23:51,869 - INFO - [in /app/app.py:394] - Unzipping HIPAA_HITECH_Privacy_for_Covered_Entities-Advarra_20250917061139.zip to processed/_temp_HIPAA_HITECH_Privacy_for_Covered_Entities-Advarra_20250917061139.zip
+2025-09-17 06:23:52,088 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:23:52,090 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:23:52,090 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:23:52,091 - INFO - [in /app/app.py:412] - Detected engine type: iengine5
+2025-09-17 06:23:52,092 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:23:52,094 - INFO - [in /app/app.py:203] - No unnecessary files found to clean.
+2025-09-17 06:23:52,095 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:23:52,095 - INFO - [in /app/app.py:138] - Setting iengine5 licensing DialogIsVisible to False.
+2025-09-17 06:23:52,096 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:23:52,096 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:23:52,097 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:23:52,097 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:23:52,098 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:23:52,099 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:23:52,100 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:52,101 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:52,101 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:52,102 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:23:52,102 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:52,103 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:52,105 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:23:52,106 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:23:52,107 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:23:52,108 - INFO - [in /app/app.py:367] - Successfully replaced LMSCommit() in scorm_2004.js.
+2025-09-17 06:23:52,108 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:23:52,109 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:23:53,124 - INFO - [in /app/app.py:470] - Successfully created processed file: HIPAA_HITECH_Privacy_for_Covered_Entities-Advarra_20250917061139_processed_2004.zip
+2025-09-17 06:23:53,125 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: HIPAA_HITECH_Privacy_for_Covered_Entities-Advarra_20250917061139.zip ---
+2025-09-17 06:23:53,145 - INFO - [in /app/app.py:495] - Successfully purged original upload: HIPAA_HITECH_Privacy_for_Covered_Entities-Advarra_20250917061139.zip
+2025-09-17 06:23:53,603 - INFO - [in /app/app.py:381] - --- Starting new processing job for: How_to_Comply_With_the_GDPR_in_the_US-Advarra_20250917061032.zip ---
+2025-09-17 06:23:53,604 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:23:53,606 - INFO - [in /app/app.py:394] - Unzipping How_to_Comply_With_the_GDPR_in_the_US-Advarra_20250917061032.zip to processed/_temp_How_to_Comply_With_the_GDPR_in_the_US-Advarra_20250917061032.zip
+2025-09-17 06:23:53,786 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:23:53,788 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:23:53,790 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:23:53,790 - INFO - [in /app/app.py:412] - Detected engine type: iengine5
+2025-09-17 06:23:53,791 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:23:53,793 - INFO - [in /app/app.py:183] - Removed file: aicc.cst
+2025-09-17 06:23:53,793 - INFO - [in /app/app.py:183] - Removed file: aicc.des
+2025-09-17 06:23:53,794 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:23:53,795 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:23:53,795 - INFO - [in /app/app.py:138] - Setting iengine5 licensing DialogIsVisible to False.
+2025-09-17 06:23:53,796 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:23:53,796 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:23:53,797 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:23:53,798 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:23:53,798 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:23:53,799 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:23:53,800 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:53,800 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:53,801 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:53,801 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:23:53,802 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:53,802 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:53,803 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:23:53,804 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:23:53,805 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:23:53,806 - INFO - [in /app/app.py:367] - Successfully replaced LMSCommit() in scorm_2004.js.
+2025-09-17 06:23:53,807 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:23:53,808 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:23:54,762 - INFO - [in /app/app.py:470] - Successfully created processed file: How_to_Comply_With_the_GDPR_in_the_US-Advarra_20250917061032_processed_2004.zip
+2025-09-17 06:23:54,763 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: How_to_Comply_With_the_GDPR_in_the_US-Advarra_20250917061032.zip ---
+2025-09-17 06:23:54,778 - INFO - [in /app/app.py:495] - Successfully purged original upload: How_to_Comply_With_the_GDPR_in_the_US-Advarra_20250917061032.zip
+2025-09-17 06:23:55,264 - INFO - [in /app/app.py:381] - --- Starting new processing job for: Key_Aspects_of_the_GDPR-Advarra_20250917061101.zip ---
+2025-09-17 06:23:55,265 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:23:55,266 - INFO - [in /app/app.py:394] - Unzipping Key_Aspects_of_the_GDPR-Advarra_20250917061101.zip to processed/_temp_Key_Aspects_of_the_GDPR-Advarra_20250917061101.zip
+2025-09-17 06:23:55,490 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:23:55,491 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:23:55,491 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:23:55,492 - INFO - [in /app/app.py:412] - Detected engine type: iengine5
+2025-09-17 06:23:55,492 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:23:55,494 - INFO - [in /app/app.py:183] - Removed file: aicc.cst
+2025-09-17 06:23:55,495 - INFO - [in /app/app.py:183] - Removed file: aicc.des
+2025-09-17 06:23:55,495 - INFO - [in /app/app.py:183] - Removed file: .gitignore
+2025-09-17 06:23:55,496 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:23:55,497 - INFO - [in /app/app.py:195] - Removed directory: .vscode
+2025-09-17 06:23:55,497 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:23:55,498 - INFO - [in /app/app.py:138] - Setting iengine5 licensing DialogIsVisible to False.
+2025-09-17 06:23:55,498 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:23:55,499 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:23:55,499 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:23:55,500 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:23:55,501 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:23:55,502 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:23:55,503 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:55,503 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:55,503 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:55,504 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:23:55,505 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:55,505 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:55,506 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:23:55,507 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:23:55,508 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:23:55,508 - INFO - [in /app/app.py:367] - Successfully replaced LMSCommit() in scorm_2004.js.
+2025-09-17 06:23:55,509 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:23:55,509 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:23:56,758 - INFO - [in /app/app.py:470] - Successfully created processed file: Key_Aspects_of_the_GDPR-Advarra_20250917061101_processed_2004.zip
+2025-09-17 06:23:56,759 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: Key_Aspects_of_the_GDPR-Advarra_20250917061101.zip ---
+2025-09-17 06:23:56,778 - INFO - [in /app/app.py:495] - Successfully purged original upload: Key_Aspects_of_the_GDPR-Advarra_20250917061101.zip
+2025-09-17 06:23:57,191 - INFO - [in /app/app.py:381] - --- Starting new processing job for: Navigating_the_GDPR_for_US_Organisations-Advarra_20250917061044.zip ---
+2025-09-17 06:23:57,191 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:23:57,192 - INFO - [in /app/app.py:394] - Unzipping Navigating_the_GDPR_for_US_Organisations-Advarra_20250917061044.zip to processed/_temp_Navigating_the_GDPR_for_US_Organisations-Advarra_20250917061044.zip
+2025-09-17 06:23:57,263 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:23:57,264 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:23:57,265 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:23:57,265 - INFO - [in /app/app.py:412] - Detected engine type: iengine5
+2025-09-17 06:23:57,266 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:23:57,268 - INFO - [in /app/app.py:183] - Removed file: .gitignore
+2025-09-17 06:23:57,268 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:23:57,269 - INFO - [in /app/app.py:195] - Removed directory: .vscode
+2025-09-17 06:23:57,270 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:23:57,272 - INFO - [in /app/app.py:138] - Setting iengine5 licensing DialogIsVisible to False.
+2025-09-17 06:23:57,272 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:23:57,273 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:23:57,274 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:23:57,275 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:23:57,275 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:23:57,277 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:23:57,277 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:57,278 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:57,278 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:57,278 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:23:57,279 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:57,279 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:57,281 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:23:57,281 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:23:57,282 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:23:57,282 - INFO - [in /app/app.py:367] - Successfully replaced LMSCommit() in scorm_2004.js.
+2025-09-17 06:23:57,283 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:23:57,284 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:23:57,525 - INFO - [in /app/app.py:470] - Successfully created processed file: Navigating_the_GDPR_for_US_Organisations-Advarra_20250917061044_processed_2004.zip
+2025-09-17 06:23:57,526 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: Navigating_the_GDPR_for_US_Organisations-Advarra_20250917061044.zip ---
+2025-09-17 06:23:57,536 - INFO - [in /app/app.py:495] - Successfully purged original upload: Navigating_the_GDPR_for_US_Organisations-Advarra_20250917061044.zip
+2025-09-17 06:23:57,917 - INFO - [in /app/app.py:381] - --- Starting new processing job for: Security_Awareness__Be_a_Strong_Link-Advarra_20250917061128.zip ---
+2025-09-17 06:23:57,917 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:23:57,918 - INFO - [in /app/app.py:394] - Unzipping Security_Awareness__Be_a_Strong_Link-Advarra_20250917061128.zip to processed/_temp_Security_Awareness__Be_a_Strong_Link-Advarra_20250917061128.zip
+2025-09-17 06:23:58,145 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:23:58,146 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:23:58,146 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:23:58,147 - INFO - [in /app/app.py:412] - Detected engine type: iengine5
+2025-09-17 06:23:58,147 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:23:58,149 - INFO - [in /app/app.py:183] - Removed file: .gitignore
+2025-09-17 06:23:58,150 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:23:58,151 - INFO - [in /app/app.py:195] - Removed directory: .vscode
+2025-09-17 06:23:58,152 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:23:58,153 - INFO - [in /app/app.py:138] - Setting iengine5 licensing DialogIsVisible to False.
+2025-09-17 06:23:58,154 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:23:58,155 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:23:58,156 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:23:58,156 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:23:58,157 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:23:58,158 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:23:58,159 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:58,160 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:58,160 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:23:58,161 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:23:58,161 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:58,161 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:23:58,163 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:23:58,163 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:23:58,164 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:23:58,165 - INFO - [in /app/app.py:367] - Successfully replaced LMSCommit() in scorm_2004.js.
+2025-09-17 06:23:58,165 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:23:58,166 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:23:59,161 - INFO - [in /app/app.py:470] - Successfully created processed file: Security_Awareness__Be_a_Strong_Link-Advarra_20250917061128_processed_2004.zip
+2025-09-17 06:23:59,162 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: Security_Awareness__Be_a_Strong_Link-Advarra_20250917061128.zip ---
+2025-09-17 06:23:59,180 - INFO - [in /app/app.py:495] - Successfully purged original upload: Security_Awareness__Be_a_Strong_Link-Advarra_20250917061128.zip
+2025-09-17 06:29:50,736 - INFO - [in /app/app.py:517] - Received request to purge workspace.
+2025-09-17 06:29:50,737 - INFO - [in /app/app.py:522] - Purging directory: uploads
+2025-09-17 06:29:50,738 - INFO - [in /app/app.py:525] - Purging directory: processed
+2025-09-17 06:29:50,739 - INFO - [in /app/app.py:528] - Workspace purged successfully.
+2025-09-17 06:29:50,999 - INFO - [in /app/app.py:381] - --- Starting new processing job for: Information_Security_for_Executives-Advarra_20250917061205.zip ---
+2025-09-17 06:29:51,000 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:29:51,002 - INFO - [in /app/app.py:394] - Unzipping Information_Security_for_Executives-Advarra_20250917061205.zip to processed/_temp_Information_Security_for_Executives-Advarra_20250917061205.zip
+2025-09-17 06:29:51,124 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:29:51,125 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:29:51,126 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:29:51,126 - INFO - [in /app/app.py:412] - Detected engine type: iengine6
+2025-09-17 06:29:51,127 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:29:51,129 - INFO - [in /app/app.py:183] - Removed file: .idea/.gitignore
+2025-09-17 06:29:51,129 - INFO - [in /app/app.py:183] - Removed file: .gitignore
+2025-09-17 06:29:51,130 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:29:51,132 - INFO - [in /app/app.py:195] - Removed directory: .vscode
+2025-09-17 06:29:51,134 - INFO - [in /app/app.py:195] - Removed directory: .idea
+2025-09-17 06:29:51,135 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:29:51,136 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:29:51,137 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:29:51,137 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:29:51,138 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:29:51,138 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:29:51,139 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:29:51,140 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:29:51,141 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:51,141 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:29:51,141 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:29:51,141 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:51,142 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:51,142 - INFO - [in /app/app.py:258] - Set <EnableCheck> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:51,144 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:29:51,144 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:29:51,145 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:29:51,145 - WARNING - [in /app/app.py:373] - scorm_2004.js not found, skipping edit.
+2025-09-17 06:29:51,146 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:29:51,146 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:29:51,702 - INFO - [in /app/app.py:470] - Successfully created processed file: Information_Security_for_Executives-Advarra_20250917061205_processed_2004.zip
+2025-09-17 06:29:51,703 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: Information_Security_for_Executives-Advarra_20250917061205.zip ---
+2025-09-17 06:29:51,709 - INFO - [in /app/app.py:495] - Successfully purged original upload: Information_Security_for_Executives-Advarra_20250917061205.zip
+2025-09-17 06:29:52,140 - INFO - [in /app/app.py:381] - --- Starting new processing job for: OWASP_Top_10-Advarra_20250917061202.zip ---
+2025-09-17 06:29:52,141 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:29:52,142 - INFO - [in /app/app.py:394] - Unzipping OWASP_Top_10-Advarra_20250917061202.zip to processed/_temp_OWASP_Top_10-Advarra_20250917061202.zip
+2025-09-17 06:29:52,325 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:29:52,326 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:29:52,327 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:29:52,327 - INFO - [in /app/app.py:412] - Detected engine type: iengine6
+2025-09-17 06:29:52,328 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:29:52,331 - INFO - [in /app/app.py:183] - Removed file: .idea/.gitignore
+2025-09-17 06:29:52,332 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:29:52,335 - INFO - [in /app/app.py:195] - Removed directory: .vscode
+2025-09-17 06:29:52,336 - INFO - [in /app/app.py:195] - Removed directory: .idea
+2025-09-17 06:29:52,337 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:29:52,337 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:29:52,338 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:29:52,339 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:29:52,340 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:29:52,341 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:29:52,343 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:29:52,344 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:29:52,345 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:52,346 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:29:52,346 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:29:52,347 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:52,347 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:52,348 - INFO - [in /app/app.py:258] - Set <EnableCheck> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:52,351 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:29:52,352 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:29:52,354 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:29:52,355 - WARNING - [in /app/app.py:373] - scorm_2004.js not found, skipping edit.
+2025-09-17 06:29:52,356 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:29:52,357 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:29:53,042 - INFO - [in /app/app.py:470] - Successfully created processed file: OWASP_Top_10-Advarra_20250917061202_processed_2004.zip
+2025-09-17 06:29:53,043 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: OWASP_Top_10-Advarra_20250917061202.zip ---
+2025-09-17 06:29:53,055 - INFO - [in /app/app.py:495] - Successfully purged original upload: OWASP_Top_10-Advarra_20250917061202.zip
+2025-09-17 06:29:53,276 - INFO - [in /app/app.py:381] - --- Starting new processing job for: Privileged_User_Security-Advarra_20250917061208.zip ---
+2025-09-17 06:29:53,277 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:29:53,278 - INFO - [in /app/app.py:394] - Unzipping Privileged_User_Security-Advarra_20250917061208.zip to processed/_temp_Privileged_User_Security-Advarra_20250917061208.zip
+2025-09-17 06:29:53,365 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:29:53,366 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:29:53,367 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:29:53,367 - INFO - [in /app/app.py:412] - Detected engine type: iengine6
+2025-09-17 06:29:53,368 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:29:53,369 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:29:53,370 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:29:53,370 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:29:53,371 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:29:53,371 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:29:53,372 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:29:53,372 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:29:53,373 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:29:53,374 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:29:53,374 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:53,375 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:29:53,375 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:29:53,375 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:53,376 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:53,376 - INFO - [in /app/app.py:258] - Set <EnableCheck> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:53,378 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:29:53,379 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:29:53,379 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:29:53,380 - WARNING - [in /app/app.py:373] - scorm_2004.js not found, skipping edit.
+2025-09-17 06:29:53,380 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:29:53,381 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:29:53,811 - INFO - [in /app/app.py:470] - Successfully created processed file: Privileged_User_Security-Advarra_20250917061208_processed_2004.zip
+2025-09-17 06:29:53,812 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: Privileged_User_Security-Advarra_20250917061208.zip ---
+2025-09-17 06:29:53,820 - INFO - [in /app/app.py:495] - Successfully purged original upload: Privileged_User_Security-Advarra_20250917061208.zip
+2025-09-17 06:29:54,305 - INFO - [in /app/app.py:381] - --- Starting new processing job for: Security_Awareness_for_Managers-Advarra_20250917061211.zip ---
+2025-09-17 06:29:54,306 - INFO - [in /app/app.py:382] - Parameters: SCORM Type='2004', KnowBe4='False', Licensed='False', SCORM Enabled='True'
+2025-09-17 06:29:54,307 - INFO - [in /app/app.py:394] - Unzipping Security_Awareness_for_Managers-Advarra_20250917061211.zip to processed/_temp_Security_Awareness_for_Managers-Advarra_20250917061211.zip
+2025-09-17 06:29:54,455 - INFO - [in /app/app.py:398] - Unzipping complete.
+2025-09-17 06:29:54,456 - INFO - [in /app/app.py:401] - Validating for imsmanifest.xml
+2025-09-17 06:29:54,456 - INFO - [in /app/app.py:407] - Manifest found.
+2025-09-17 06:29:54,457 - INFO - [in /app/app.py:412] - Detected engine type: iengine6
+2025-09-17 06:29:54,458 - INFO - [in /app/app.py:171] - Starting file cleanup process.
+2025-09-17 06:29:54,462 - INFO - [in /app/app.py:183] - Removed file: .idea/.gitignore
+2025-09-17 06:29:54,463 - INFO - [in /app/app.py:183] - Removed file: .gitignore
+2025-09-17 06:29:54,465 - INFO - [in /app/app.py:183] - Removed file: README.md
+2025-09-17 06:29:54,467 - INFO - [in /app/app.py:195] - Removed directory: .idea
+2025-09-17 06:29:54,468 - INFO - [in /app/app.py:205] - File cleanup process completed.
+2025-09-17 06:29:54,468 - INFO - [in /app/app.py:434] - SCORM is enabled, validating manifest files.
+2025-09-17 06:29:54,469 - INFO - [in /app/app.py:442] - Manifests validated.
+2025-09-17 06:29:54,469 - INFO - [in /app/app.py:446] - Updating manifest for SCORM 2004.
+2025-09-17 06:29:54,470 - INFO - [in /app/app.py:453] - Manifest update complete.
+2025-09-17 06:29:54,470 - INFO - [in /app/app.py:210] - Editing adminsettings.xml: SCORM Enabled=True, Licensed=False.
+2025-09-17 06:29:54,471 - INFO - [in /app/app.py:218] - Processing adminsettings.xml at: xmls/en/adminsettings.xml
+2025-09-17 06:29:54,472 - INFO - [in /app/app.py:237] - Set <UseScorm> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:29:54,474 - INFO - [in /app/app.py:237] - Set <UseScormVersion12> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:54,475 - INFO - [in /app/app.py:237] - Set <UseScormVersion2004> to 'true' in xmls/en/adminsettings.xml
+2025-09-17 06:29:54,475 - INFO - [in /app/app.py:237] - Set <URLOnExit> to '' in xmls/en/adminsettings.xml
+2025-09-17 06:29:54,475 - INFO - [in /app/app.py:237] - Set <ReviewMode> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:54,476 - INFO - [in /app/app.py:237] - Set <HostedOniLMS> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:54,476 - INFO - [in /app/app.py:258] - Set <EnableCheck> to 'false' in xmls/en/adminsettings.xml
+2025-09-17 06:29:54,477 - INFO - [in /app/app.py:281] - Finished processing 1 adminsettings.xml file(s).
+2025-09-17 06:29:54,478 - INFO - [in /app/app.py:340] - Starting JS file edits for SCORM 2004.
+2025-09-17 06:29:54,478 - INFO - [in /app/app.py:359] - Standard SCORM 2004 processing.
+2025-09-17 06:29:54,479 - WARNING - [in /app/app.py:373] - scorm_2004.js not found, skipping edit.
+2025-09-17 06:29:54,479 - INFO - [in /app/app.py:375] - JS file edits for SCORM 2004 completed.
+2025-09-17 06:29:54,479 - INFO - [in /app/app.py:465] - Re-zipping the package.
+2025-09-17 06:29:55,058 - INFO - [in /app/app.py:470] - Successfully created processed file: Security_Awareness_for_Managers-Advarra_20250917061211_processed_2004.zip
+2025-09-17 06:29:55,059 - INFO - [in /app/app.py:485] - --- Successfully finished processing job for: Security_Awareness_for_Managers-Advarra_20250917061211.zip ---
+2025-09-17 06:29:55,075 - INFO - [in /app/app.py:495] - Successfully purged original upload: Security_Awareness_for_Managers-Advarra_20250917061211.zip
+2025-11-07 18:17:42,468 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-07 18:17:42,591 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-07 18:17:42,721 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-07 18:17:42,782 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-07 18:17:42,798 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 19:33:14,335 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 19:33:14,335 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 19:33:14,335 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 19:33:14,335 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 19:33:14,335 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 19:33:40,580 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 19:33:40,660 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 19:33:40,660 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 19:33:40,728 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 19:33:40,839 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 20:07:13,547 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 20:07:13,646 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 20:07:13,733 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 20:07:13,765 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.
+2025-11-10 20:07:13,809 - INFO - [in /app/logging_config.py:49] - Logging has been successfully configured.

@@ -42,8 +42,8 @@ def setup_logging(app):
 
     # Also log to the console (useful for Docker logs)
     # You can comment this out if you only want file-based logs
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(log_formatter)
-    app.logger.addHandler(console_handler)
+    # console_handler = logging.StreamHandler()
+    # console_handler.setFormatter(log_formatter)
+    # app.logger.addHandler(console_handler)
 
     app.logger.info('Logging has been successfully configured.')
